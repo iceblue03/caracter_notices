@@ -9,7 +9,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   
   // List of instagram handles to track
-  const [trackedShops, setTrackedShops] = useState<string[]>(['popga_official', 'the_hyundai_seoul', 'seoultravel']);
+  const [trackedShops, setTrackedShops] = useState<string[]>(['smg_holdings', 'bandainamcokorea', 'nintendo_korea']);
   const [newShopInput, setNewShopInput] = useState('');
 
   const handleSync = async () => {
@@ -69,7 +69,7 @@ export default function App() {
               <LayoutGrid size={20} />
             </div>
             <h1 className="text-xl font-bold tracking-tight text-slate-800">
-              팝업 & 이벤트 모아보기
+              덕질 & 서브컬처 팝업 모아보기
             </h1>
           </div>
           
