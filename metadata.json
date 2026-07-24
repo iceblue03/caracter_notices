@@ -1,0 +1,6 @@
+{
+  "name": "Goods Shop Aggregator",
+  "description": "A service that aggregates news and updates from various character and goods shops' social media.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
