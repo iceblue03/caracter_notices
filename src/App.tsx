@@ -54,19 +54,21 @@ export default function App() {
     return counts;
   }, [annotatedPosts]);
 
-  const handleSync = useCallback(async () => {
+  const handleSync = useCallback(async (force = false) => {
     const targets = ids.map(getCharacter).filter((c): c is Character => Boolean(c));
     if (targets.length === 0) return;
     setSyncing(true);
     try {
-      const result = await syncLiveFeed(targets);
+      const result = await syncLiveFeed(targets, force);
       if (result.live) {
         setLive(true);
         setSyncNote(undefined);
         setLivePosts((prev) => dedupeById([...result.posts, ...prev]));
       } else if (result.reason === 'no-token') {
         setSyncNote('라이브 SNS 동기화가 아직 설정되지 않아, 샘플 소식을 보여드리고 있어요. (APIFY_API_TOKEN 필요)');
-      } else if (result.reason && result.reason !== 'no-accounts') {
+      } else if (force && result.reason && result.reason !== 'no-accounts' && result.reason !== 'idle') {
+        // Only surface a failure note for an explicit refresh; a quiet auto-load
+        // that finds no live data just keeps showing the sample feed.
         setSyncNote(`라이브 동기화에 실패했어요: ${result.reason}. 샘플 소식을 표시합니다.`);
       }
     } finally {
@@ -74,9 +76,9 @@ export default function App() {
     }
   }, [ids]);
 
-  // Attempt a live sync once on load.
+  // On load, ask for cached live posts only — this never triggers a paid scrape.
   useEffect(() => {
-    handleSync();
+    handleSync(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -118,7 +120,7 @@ export default function App() {
             syncing={syncing}
             live={live}
             syncNote={syncNote}
-            onSync={handleSync}
+            onSync={() => handleSync(true)}
             onSelectCharacter={openCharacter}
             onDiscover={goDiscover}
           />

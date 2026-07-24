@@ -1,4 +1,5 @@
 import { Character, FeedPost, PostMatch } from '../types';
+import { MISC_ID } from '../characters';
 
 /** Lowercase + collapse whitespace so matching is case/spacing-insensitive. */
 function normalize(text: string): string {
@@ -44,22 +45,15 @@ function postHaystack(post: FeedPost): string {
   return `${post.content} ${post.author} ${post.handle}`;
 }
 
-/** Annotate a single post with the characters it mentions. */
-export function annotatePost(post: FeedPost, characters: Character[]): FeedPost {
-  return { ...post, matches: matchText(postHaystack(post), characters) };
-}
-
 /**
- * Annotate every post, then keep only those relevant to at least one of the
- * given characters. Posts are returned newest-first.
+ * Annotate a single post with the characters/works it mentions. If nothing
+ * matches, fall back to the "기타" bucket (MISC_ID) so no post is ever left
+ * unclassified or silently dropped from the feed.
  */
-export function filterPostsForCharacters(
-  posts: FeedPost[],
-  characters: Character[],
-): FeedPost[] {
-  const wanted = new Set(characters.map((c) => c.id));
-  return posts
-    .map((post) => annotatePost(post, characters))
-    .filter((post) => post.matches!.some((m) => wanted.has(m.characterId)))
-    .sort((a, b) => b.timestamp - a.timestamp);
+export function annotatePost(post: FeedPost, characters: Character[]): FeedPost {
+  const matches = matchText(postHaystack(post), characters);
+  if (matches.length === 0) {
+    return { ...post, matches: [{ characterId: MISC_ID, score: 0, terms: [] }] };
+  }
+  return { ...post, matches };
 }

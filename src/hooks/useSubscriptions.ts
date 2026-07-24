@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'oshinoti.subscriptions.v1';
+// Bumped to v2 when the taxonomy switched from anime characters to works,
+// so old character-id subscriptions in storage are discarded.
+const STORAGE_KEY = 'oshinoti.subscriptions.v2';
 
-// Characters a first-time visitor starts with, so the feed isn't empty.
-const DEFAULT_SUBSCRIPTIONS = ['gojo', 'anya', 'nezuko'];
+// Works a first-time visitor starts with, so the feed isn't empty.
+// (w001 원피스 · w031 체인소맨 · w071 주술회전 — the pre-filled examples;
+// 'misc' — the 기타 bucket, so unclassified live posts are visible too.)
+const DEFAULT_SUBSCRIPTIONS = ['w001', 'w031', 'w071', 'misc'];
 
 function load(): string[] {
   try {

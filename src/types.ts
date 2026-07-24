@@ -1,6 +1,31 @@
 export type Platform = 'instagram' | 'twitter';
 
 /**
+ * A representative character of a work. `aliases` are the matching terms
+ * (Korean/English/Japanese names & nicknames). Kept small — 2-3 per work.
+ */
+export interface WorkCharacter {
+  name: string;       // Korean display name
+  aliases: string[];  // terms that, if found in a post, tie it to this character
+}
+
+/**
+ * A work (anime / manga / game) — the classifier's top-level unit. Users
+ * subscribe to works; a post is relevant to a work if its text mentions the
+ * work's `aliases` or any representative character's aliases/name.
+ *
+ * `aliases` and `characters` are filled in later (a sub-model handles that);
+ * `id`, `title`, and `category` are fixed and must not be reordered/renamed.
+ */
+export interface Work {
+  id: string;         // stable slug, e.g. "w001"
+  title: string;      // canonical label as provided, e.g. "원피스"
+  category: string;   // "애니메이션" | "게임"
+  aliases: string[];  // work-level matching terms (may be empty until filled)
+  characters: WorkCharacter[]; // 2-3 representative characters (may be empty)
+}
+
+/**
  * A subscribable anime character. Users pick these, and the feed is filtered
  * down to SNS posts that mention the character (via `keywords` / `hashtags`).
  */

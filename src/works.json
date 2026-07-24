@@ -1,0 +1,1120 @@
+[
+  {
+    "id": "w001",
+    "title": "원피스",
+    "category": "애니메이션",
+    "aliases": [
+      "원피스",
+      "one piece",
+      "onepiece",
+      "ワンピース"
+    ],
+    "characters": [
+      {
+        "name": "몽키 D. 루피",
+        "aliases": [
+          "루피",
+          "luffy",
+          "몽키디루피",
+          "ルフィ"
+        ]
+      },
+      {
+        "name": "로로노아 조로",
+        "aliases": [
+          "조로",
+          "zoro",
+          "롤로노아조로",
+          "ゾロ"
+        ]
+      },
+      {
+        "name": "나미",
+        "aliases": [
+          "나미",
+          "nami",
+          "ナミ"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w002",
+    "title": "향기꽃",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w003",
+    "title": "귀칼",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w004",
+    "title": "스파패",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w005",
+    "title": "그비돌",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w006",
+    "title": "포켓몬",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w007",
+    "title": "치이카와",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w008",
+    "title": "블리치",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w009",
+    "title": "나루토",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w010",
+    "title": "지하군",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w011",
+    "title": "드레곤볼",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w012",
+    "title": "카구야님은 고백",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w013",
+    "title": "리제로",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w014",
+    "title": "무직전생",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w015",
+    "title": "이세계에 갔으면 최선을 다한다",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w016",
+    "title": "못 미더운 악녀입니다만",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w017",
+    "title": "정반대의 너와 나",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w018",
+    "title": "전생슬",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w019",
+    "title": "강철연",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w020",
+    "title": "불꽃소방대",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w021",
+    "title": "소울이터",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w022",
+    "title": "흑집사",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w023",
+    "title": "봇치더락",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w024",
+    "title": "하루히",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w025",
+    "title": "케이온",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w026",
+    "title": "어떤과학의초전",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w027",
+    "title": "최애의 아이",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w028",
+    "title": "이루마군",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w029",
+    "title": "하이큐",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w030",
+    "title": "블루록",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w031",
+    "title": "체인소맨",
+    "category": "애니메이션",
+    "aliases": [
+      "체인소맨",
+      "chainsaw man",
+      "chainsawman",
+      "チェンソーマン"
+    ],
+    "characters": [
+      {
+        "name": "덴지",
+        "aliases": [
+          "덴지",
+          "denji",
+          "デンジ"
+        ]
+      },
+      {
+        "name": "마키마",
+        "aliases": [
+          "마키마",
+          "makima",
+          "マキマ"
+        ]
+      },
+      {
+        "name": "파워",
+        "aliases": [
+          "파워",
+          "power",
+          "パワー"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w032",
+    "title": "진격거",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w033",
+    "title": "프리렌",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w034",
+    "title": "죠죠",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w035",
+    "title": "약사혼",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w036",
+    "title": "사카데이",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w037",
+    "title": "원펀맨",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w038",
+    "title": "은혼",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w039",
+    "title": "짱구",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w040",
+    "title": "도라에몽",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w041",
+    "title": "암살교실",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w042",
+    "title": "도망잘치는",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w043",
+    "title": "어서오세요 실력지상주의",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w044",
+    "title": "방패용사",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w045",
+    "title": "슬라임 300년",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w046",
+    "title": "마왕성에서 잘자요",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w047",
+    "title": "초카구야",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w048",
+    "title": "도쿄구울",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w049",
+    "title": "도리벤",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w050",
+    "title": "지",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w051",
+    "title": "공각기동대",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w052",
+    "title": "아키라",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w053",
+    "title": "페이트",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w054",
+    "title": "에반게리온",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w055",
+    "title": "아노하나",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w056",
+    "title": "기생수",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w057",
+    "title": "요괴워치",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w058",
+    "title": "86",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w059",
+    "title": "데놋",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w060",
+    "title": "코드기어스",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w061",
+    "title": "헌헌",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w062",
+    "title": "닥터스톤",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w063",
+    "title": "소아온",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w064",
+    "title": "사카모토",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w065",
+    "title": "마슐",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w066",
+    "title": "우마루",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w067",
+    "title": "렌탈여친",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w068",
+    "title": "식극의소마",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w069",
+    "title": "요리왕 비룡",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w070",
+    "title": "바이올렛 에버가든",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w071",
+    "title": "주술회전",
+    "category": "애니메이션",
+    "aliases": [
+      "주술회전",
+      "jujutsu kaisen",
+      "jjk",
+      "呪術廻戦"
+    ],
+    "characters": [
+      {
+        "name": "고죠 사토루",
+        "aliases": [
+          "고죠",
+          "사토루",
+          "gojo",
+          "satoru",
+          "五条悟"
+        ]
+      },
+      {
+        "name": "이타도리 유지",
+        "aliases": [
+          "이타도리",
+          "유지",
+          "itadori",
+          "yuji"
+        ]
+      },
+      {
+        "name": "후시구로 메구미",
+        "aliases": [
+          "후시구로",
+          "메구미",
+          "fushiguro",
+          "megumi"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w072",
+    "title": "네버랜드",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w073",
+    "title": "4너거",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w074",
+    "title": "5등분",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w075",
+    "title": "지옥락",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w076",
+    "title": "블랙클로버",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w077",
+    "title": "종말의 발키리",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w078",
+    "title": "마법사의 신부",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w079",
+    "title": "청엑",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w080",
+    "title": "혈계전선",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w081",
+    "title": "유녀전기",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w082",
+    "title": "노라가미",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w083",
+    "title": "호리야미",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w084",
+    "title": "샤를로트",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w085",
+    "title": "단다단",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w086",
+    "title": "비스타즈",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w087",
+    "title": "나만이 없는",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w088",
+    "title": "불멸의 그대",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w089",
+    "title": "괴8",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w090",
+    "title": "사펑",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w091",
+    "title": "그랜라간",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w092",
+    "title": "타카키양",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w093",
+    "title": "코노스바",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w094",
+    "title": "럽라",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w095",
+    "title": "고블린슬레이어",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w096",
+    "title": "던만추",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w097",
+    "title": "메이드인어비스",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w098",
+    "title": "일곱대죄",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w099",
+    "title": "커뮤증",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w100",
+    "title": "이니셜D",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w101",
+    "title": "아픈싫방올",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w102",
+    "title": "월간노자키",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w103",
+    "title": "내청춘코미디",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w104",
+    "title": "청춘바니걸선배",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w105",
+    "title": "사쿠라쨩애완",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w106",
+    "title": "종말에뭐하세요",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w107",
+    "title": "너에게닿기를",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w108",
+    "title": "중2코이",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w109",
+    "title": "데빌맨",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w110",
+    "title": "단간론파",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w111",
+    "title": "플라스틱메모리즈",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w112",
+    "title": "나츠메",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w113",
+    "title": "오란고교",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w114",
+    "title": "살육의 천사",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w115",
+    "title": "킬라킬",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w116",
+    "title": "새벽의 연화",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w117",
+    "title": "펜스가",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w118",
+    "title": "니세코이",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w119",
+    "title": "케로로",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w120",
+    "title": "일하는세포",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w121",
+    "title": "가면라이더",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w122",
+    "title": "바라카몬",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w123",
+    "title": "아이엠스타",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w124",
+    "title": "터닝메카드",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w125",
+    "title": "사이코패스",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w126",
+    "title": "다이아몬드에이스",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w127",
+    "title": "미래일기",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w128",
+    "title": "사쿠재",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w129",
+    "title": "시키모리",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w130",
+    "title": "크게휘ㄷ",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w131",
+    "title": "메이드래",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w132",
+    "title": "좀100",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w133",
+    "title": "알바마왕",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w134",
+    "title": "극주부도",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w135",
+    "title": "몹사",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w136",
+    "title": "나를너무100",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w137",
+    "title": "문스독",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w138",
+    "title": "오늘부터 신령",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w139",
+    "title": "로젠메이든",
+    "category": "애니메이션",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w140",
+    "title": "블루아카이브",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w141",
+    "title": "명조",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w142",
+    "title": "니케",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w143",
+    "title": "우마무스메",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w144",
+    "title": "트릭걸",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w145",
+    "title": "미호요",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  },
+  {
+    "id": "w146",
+    "title": "프세카",
+    "category": "게임",
+    "aliases": [],
+    "characters": []
+  }
+]
