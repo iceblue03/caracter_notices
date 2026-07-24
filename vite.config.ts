@@ -5,7 +5,10 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/caracter_notices/',
+    // GitHub Pages serves this repo from /caracter_notices/, so assets need
+    // that prefix there. Vercel (and any other root-domain host) serves from
+    // /, so use root base there — Vercel sets VERCEL=1 during its builds.
+    base: process.env.VERCEL ? '/' : '/caracter_notices/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
