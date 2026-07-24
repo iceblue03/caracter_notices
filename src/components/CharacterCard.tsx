@@ -18,12 +18,24 @@ export function CharacterCard({ character, subscribed, postCount, onToggle, onOp
       <button
         onClick={onOpen}
         className="block w-full h-20 relative overflow-hidden rounded-t-2xl"
-        style={{ background: gradientStyle(character.gradient) }}
+        style={
+          character.backgroundImage
+            ? {
+                backgroundImage: `url(${character.backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }
+            : { background: gradientStyle(character.gradient) }
+        }
         aria-label={`${character.name} 상세 보기`}
       >
-        <span className="absolute inset-0 opacity-20 text-white text-5xl grid place-items-center select-none">
-          {character.emoji}
-        </span>
+        {character.backgroundImage ? (
+          <span className="absolute inset-0 bg-black/15" />
+        ) : (
+          <span className="absolute inset-0 opacity-20 text-white text-5xl grid place-items-center select-none">
+            {character.emoji}
+          </span>
+        )}
       </button>
 
       <div className="relative z-10 px-4 pb-4 -mt-8">

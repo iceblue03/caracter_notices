@@ -28,10 +28,25 @@ export function CharacterDetailView({
   return (
     <div className="pb-10">
       {/* Hero */}
-      <div className="relative z-0 h-40 sm:h-52" style={{ background: gradientStyle(character.gradient) }}>
-        <span className="absolute inset-0 grid place-items-center text-[10rem] opacity-15 text-white select-none">
-          {character.emoji}
-        </span>
+      <div
+        className="relative z-0 h-40 sm:h-52"
+        style={
+          character.backgroundImage
+            ? {
+                backgroundImage: `url(${character.backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }
+            : { background: gradientStyle(character.gradient) }
+        }
+      >
+        {character.backgroundImage ? (
+          <span className="absolute inset-0 bg-black/20" />
+        ) : (
+          <span className="absolute inset-0 grid place-items-center text-[10rem] opacity-15 text-white select-none">
+            {character.emoji}
+          </span>
+        )}
         <button
           onClick={onBack}
           className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-white/90 hover:text-white bg-black/15 hover:bg-black/25 backdrop-blur px-3 py-1.5 rounded-full text-sm font-medium transition-colors"

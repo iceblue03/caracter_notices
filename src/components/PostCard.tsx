@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Instagram, Twitter, ExternalLink, Sparkles, Loader2 } from 'lucide-react';
+import { Instagram, Twitter, ExternalLink, Languages, Loader2 } from 'lucide-react';
 import { Character, FeedPost } from '../types';
 import { CHARACTER_MAP } from '../characters';
-import { colorFromString, imageSrc, relativeTime } from '../lib/utils';
-import { summarizePost } from '../lib/api';
+import { colorFromString, imageSrc, relativeTime, stripLinks } from '../lib/utils';
+import { translatePost } from '../lib/api';
 import { CharacterChip } from './CharacterChip';
 
 interface Props {
@@ -38,8 +38,8 @@ function AuthorAvatar({ src, name }: { src?: string; name: string }) {
 }
 
 export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
-  const [summary, setSummary] = useState<string | null>(null);
-  const [summaryState, setSummaryState] = useState<'idle' | 'loading' | 'unavailable'>('idle');
+  const [translation, setTranslation] = useState<string | null>(null);
+  const [translateState, setTranslateState] = useState<'idle' | 'loading' | 'unavailable'>('idle');
   const [imageFailed, setImageFailed] = useState(false);
 
   // Characters this post matched, subscribed ones first.
@@ -52,20 +52,19 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
       return aH - bH;
     });
 
-  const primary = matchedChars[0];
-
-  const handleSummarize = async () => {
-    setSummaryState('loading');
-    const res = await summarizePost(post.content, primary?.name ?? '');
-    if (res.available && res.summary) {
-      setSummary(res.summary);
-      setSummaryState('idle');
+  const handleTranslate = async () => {
+    setTranslateState('loading');
+    const res = await translatePost(post.content);
+    if (res.translated) {
+      setTranslation(res.translated);
+      setTranslateState('idle');
     } else {
-      setSummaryState('unavailable');
+      setTranslateState('unavailable');
     }
   };
 
   const avatar = imageSrc(post.avatarUrl);
+  const content = stripLinks(post.content);
 
   return (
     <article className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 transition-shadow">
@@ -110,16 +109,18 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
           </div>
         )}
 
-        {/* Body */}
-        <p className="text-slate-700 whitespace-pre-wrap leading-relaxed text-[15px]">
-          {post.content}
-        </p>
+        {/* Body (raw links stripped — "원본 보기" below covers those) */}
+        {content && (
+          <p className="text-slate-700 whitespace-pre-wrap leading-relaxed text-[15px]">
+            {content}
+          </p>
+        )}
 
-        {/* AI summary */}
-        {summary && (
-          <div className="mt-3 flex gap-2 items-start bg-violet-50 border border-violet-100 rounded-xl px-3 py-2.5">
-            <Sparkles size={15} className="text-violet-500 mt-0.5 shrink-0" />
-            <p className="text-sm text-violet-900 leading-relaxed">{summary}</p>
+        {/* Translation */}
+        {translation && (
+          <div className="mt-3 flex gap-2 items-start bg-sky-50 border border-sky-100 rounded-xl px-3 py-2.5">
+            <Languages size={15} className="text-sky-500 mt-0.5 shrink-0" />
+            <p className="text-sm text-sky-900 leading-relaxed">{translation}</p>
           </div>
         )}
       </div>
@@ -139,28 +140,30 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
       )}
 
       {/* Actions */}
-      <div className="px-5 py-2.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between">
-        {summaryState === 'unavailable' ? (
-          <span className="text-xs text-slate-400">AI 요약을 사용할 수 없어요</span>
-        ) : (
-          <button
-            onClick={handleSummarize}
-            disabled={summaryState === 'loading' || !!summary}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-violet-600 hover:text-violet-700 disabled:text-slate-300 transition-colors"
-          >
-            {summaryState === 'loading' ? (
-              <Loader2 size={15} className="animate-spin" />
-            ) : (
-              <Sparkles size={15} />
-            )}
-            {summary ? 'AI 요약 완료' : 'AI 3줄 요약'}
-          </button>
-        )}
+      <div className="px-5 py-2.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-4 min-w-0">
+          {translateState === 'unavailable' ? (
+            <span className="text-xs text-slate-400">번역을 사용할 수 없어요</span>
+          ) : (
+            <button
+              onClick={handleTranslate}
+              disabled={translateState === 'loading' || !!translation}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-sky-600 hover:text-sky-700 disabled:text-slate-300 transition-colors"
+            >
+              {translateState === 'loading' ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : (
+                <Languages size={15} />
+              )}
+              {translation ? '번역 완료' : '번역'}
+            </button>
+          )}
+        </div>
         <a
           href={post.link}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
+          className="shrink-0 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
         >
           원본 보기 <ExternalLink size={14} />
         </a>

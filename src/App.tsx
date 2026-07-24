@@ -31,7 +31,6 @@ export default function App() {
   });
   const [view, setView] = useState<View>({ name: 'feed' });
   const [livePosts, setLivePosts] = useState<FeedPost[]>([]);
-  const [syncing, setSyncing] = useState(false);
   const [live, setLive] = useState(false);
   const [syncNote, setSyncNote] = useState<string | undefined>();
 
@@ -63,31 +62,23 @@ export default function App() {
     return counts;
   }, [annotatedPosts]);
 
-  const handleSync = useCallback(async (force = false) => {
+  // Loads whatever's already cached — syncing is stopped, so this never
+  // triggers a new scrape (see syncLiveFeed's `force` contract).
+  const loadCachedFeed = useCallback(async () => {
     const targets = ids.map(getCharacter).filter((c): c is Character => Boolean(c));
     if (targets.length === 0) return;
-    setSyncing(true);
-    try {
-      const result = await syncLiveFeed(targets, force);
-      if (result.live) {
-        setLive(true);
-        setSyncNote(undefined);
-        setLivePosts((prev) => dedupeById([...result.posts, ...prev]));
-      } else if (result.reason === 'no-token') {
-        setSyncNote('라이브 SNS 동기화가 아직 설정되지 않아, 샘플 소식을 보여드리고 있어요. (APIFY_API_TOKEN 필요)');
-      } else if (force && result.reason && result.reason !== 'no-accounts' && result.reason !== 'idle') {
-        // Only surface a failure note for an explicit refresh; a quiet auto-load
-        // that finds no live data just keeps showing the sample feed.
-        setSyncNote(`라이브 동기화에 실패했어요: ${result.reason}. 샘플 소식을 표시합니다.`);
-      }
-    } finally {
-      setSyncing(false);
+    const result = await syncLiveFeed(targets, false);
+    if (result.live) {
+      setLive(true);
+      setSyncNote(undefined);
+      setLivePosts((prev) => dedupeById([...result.posts, ...prev]));
+    } else if (result.reason === 'no-token') {
+      setSyncNote('라이브 SNS 동기화가 아직 설정되지 않아, 샘플 소식을 보여드리고 있어요. (APIFY_API_TOKEN 필요)');
     }
   }, [ids]);
 
-  // On load, ask for cached live posts only — this never triggers a paid scrape.
   useEffect(() => {
-    handleSync(false);
+    loadCachedFeed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,6 +94,7 @@ export default function App() {
   if (!onboarded) {
     return (
       <TasteLanding
+        postCounts={postCounts}
         onComplete={({ workIds, profile }) => {
           const nextIds = [...workIds, 'misc'];
           replace(nextIds);
@@ -142,10 +134,8 @@ export default function App() {
           <FeedView
             subscribed={subscribedCharacters}
             posts={feedPosts}
-            syncing={syncing}
             live={live}
             syncNote={syncNote}
-            onSync={() => handleSync(true)}
             onSelectCharacter={openCharacter}
             onDiscover={goDiscover}
           />

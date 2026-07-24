@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { RefreshCw, Loader2, Compass, Radio, Inbox } from 'lucide-react';
+import { Compass, CircleOff, Inbox } from 'lucide-react';
 import { Character, FeedPost } from '../types';
 import { PostCard } from './PostCard';
 import { CharacterAvatar } from './CharacterAvatar';
@@ -7,10 +7,8 @@ import { CharacterAvatar } from './CharacterAvatar';
 interface Props {
   subscribed: Character[];
   posts: FeedPost[]; // already filtered to subscriptions, annotated, newest-first
-  syncing: boolean;
   live: boolean;
   syncNote?: string;
-  onSync: () => void;
   onSelectCharacter: (id: string) => void;
   onDiscover: () => void;
 }
@@ -18,10 +16,8 @@ interface Props {
 export function FeedView({
   subscribed,
   posts,
-  syncing,
   live,
   syncNote,
-  onSync,
   onSelectCharacter,
   onDiscover,
 }: Props) {
@@ -52,22 +48,14 @@ export function FeedView({
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">홈 피드</h1>
           <p className="text-sm text-slate-500 mt-1">
             {live ? (
-              <span className="inline-flex items-center gap-1.5 text-emerald-600 font-medium">
-                <Radio size={13} /> 라이브 동기화됨
+              <span className="inline-flex items-center gap-1.5 text-slate-500 font-medium">
+                <CircleOff size={13} /> 동기화 중단됨
               </span>
             ) : (
               '최애 캐릭터의 소식만 모았어요'
             )}
           </p>
         </div>
-        <button
-          onClick={onSync}
-          disabled={syncing}
-          className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold bg-white border border-slate-200 text-slate-700 px-3.5 py-2 rounded-full hover:bg-slate-50 hover:border-slate-300 transition-colors disabled:opacity-60"
-        >
-          {syncing ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />}
-          {syncing ? '동기화 중' : '새 소식'}
-        </button>
       </div>
 
       {/* Character filter rail */}

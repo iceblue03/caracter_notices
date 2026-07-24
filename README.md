@@ -22,7 +22,7 @@ Apify 토큰이 없어도 번들된 **샘플 소식**으로 전체 흐름이 그
 - **홈 피드** — 구독 캐릭터의 소식만. 상단 칩으로 특정 캐릭터만 골라 보기.
 - **캐릭터 탐색** — 인기·작품별로 캐릭터를 둘러보고 구독/해제.
 - **캐릭터 상세** — 캐릭터 소개, 관련 해시태그, 그 캐릭터의 모든 소식.
-- **AI 3줄 요약** — 게시물을 팬 관점에서 한 문장으로 요약 (서버 Gemini, 선택).
+- **번역** — 게시물을 한국어로 번역 (Google 번역, 무료·비공식 엔드포인트).
 
 ## 개발
 
@@ -39,12 +39,11 @@ bun run lint         # tsc 타입 체크
 | 변수 | 설명 |
 | --- | --- |
 | `APIFY_API_TOKEN` | Apify Instagram 스크래퍼 사용. 없으면 샘플 소식으로 동작. |
-| `GEMINI_API_KEY` | 게시물 AI 요약. 없으면 요약 기능만 비활성화. |
 
 ## 구조
 
 ```
-server.ts                 Express: 이미지 프록시 · /api/feed/sync · /api/ai/summarize
+server.ts                 Express: 이미지 프록시 · /api/feed/sync · /api/translate
 src/
   characters.ts           구독 가능한 캐릭터 카탈로그 (키워드·해시태그·소스 계정)
   data.ts                 번들 샘플 소식

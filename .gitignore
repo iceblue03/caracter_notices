@@ -6,6 +6,5 @@ coverage/
 *.log
 .env*
 !.env.example
-
-# Persisted scraped feed (runtime data, not source)
-data/
+.claude/
+package-lock.json

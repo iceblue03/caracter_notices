@@ -283,34 +283,37 @@ async function startServer() {
     }
   });
 
-  // ── Optional AI summary ────────────────────────────────────────────────
-  // Uses server-side Gemini (if GEMINI_API_KEY is set) to summarise a post for
-  // a fan. Degrades gracefully to { available: false } when not configured.
-  app.post("/api/ai/summarize", async (req, res) => {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) {
-      return res.json({ available: false, summary: null });
-    }
-    const { content, character } = req.body as { content?: string; character?: string };
-    if (!content) {
-      return res.status(400).json({ available: true, summary: null, error: "content required" });
+  // ── Post translation ────────────────────────────────────────────────────
+  // Uses Google's free, unofficial "gtx" translate endpoint (the same one
+  // browser extensions use) — no API key or billing account needed. It's
+  // unsupported/undocumented, so treat failures as routine and degrade
+  // gracefully rather than surfacing them as errors.
+  app.post("/api/translate", async (req, res) => {
+    const { text, target } = req.body as { text?: string; target?: string };
+    if (!text) {
+      return res.status(400).json({ translated: null, error: "text required" });
     }
     try {
-      const { GoogleGenAI } = await import("@google/genai");
-      const ai = new GoogleGenAI({ apiKey: key });
-      const prompt =
-        `너는 애니 굿즈/소식 큐레이터야. 아래 SNS 게시물을` +
-        (character ? ` '${character}' 캐릭터의 팬 관점에서` : "") +
-        ` 핵심만 한국어 한 문장(45자 이내)으로 요약해줘. 해시태그와 이모지는 빼고, 담백하게.\n\n게시물:\n${content}`;
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
+      const params = new URLSearchParams({
+        client: "gtx",
+        sl: "auto",
+        tl: target || "ko",
+        dt: "t",
+        q: text,
       });
-      const summary = (response.text || "").trim();
-      res.json({ available: true, summary: summary || null });
+      const response = await fetch(`https://translate.googleapis.com/translate_a/single?${params}`);
+      if (!response.ok) {
+        throw new Error(`translate endpoint responded ${response.status}`);
+      }
+      const data = (await response.json()) as any;
+      const translated = (data?.[0] ?? [])
+        .map((chunk: any) => chunk?.[0] ?? "")
+        .join("")
+        .trim();
+      res.json({ translated: translated || null });
     } catch (error: any) {
-      console.error("[ai/summarize] Error:", error);
-      res.json({ available: true, summary: null, error: error.message || "AI request failed" });
+      console.error("[translate] Error:", error);
+      res.json({ translated: null, error: error.message || "translation failed" });
     }
   });
 

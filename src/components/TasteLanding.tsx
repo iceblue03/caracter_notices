@@ -14,6 +14,11 @@ import {
 import { ANIME_TITLES } from '../animeTitles';
 import { WORKS } from '../characters';
 
+// `WORKS` isn't in the same order as `ANIME_TITLES` (curated works were
+// entered out of sequence), so titles must be resolved to a work id by
+// name — never by matching index into both arrays.
+const WORK_ID_BY_TITLE = new Map(WORKS.map((w) => [w.title, w.id]));
+
 export interface OnboardingProfile {
   residence: string;
   gender: string;
@@ -27,6 +32,8 @@ export interface OnboardingProfile {
 }
 
 interface Props {
+  /** Known post count per work id — used to rank the title picker by activity. */
+  postCounts: Record<string, number>;
   onComplete: (result: { workIds: string[]; profile: OnboardingProfile }) => void;
 }
 
@@ -61,18 +68,25 @@ const STEPS = [
   { kicker: 'TITLES', title: '좋아하는 작품을 담아주세요', icon: Sparkles },
 ];
 
-export function TasteLanding({ onComplete }: Props) {
+export function TasteLanding({ postCounts, onComplete }: Props) {
   const [step, setStep] = useState(0);
   const [profile, setProfile] = useState<OnboardingProfile>(EMPTY_PROFILE);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<number[]>([]);
 
+  // Most-talked-about titles first, so popular picks surface without searching.
+  const countOf = (title: string) => {
+    const id = WORK_ID_BY_TITLE.get(title);
+    return id ? postCounts[id] ?? 0 : 0;
+  };
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ANIME_TITLES.map((title, index) => ({ title, index })).filter(
-      ({ title }) => !q || title.toLowerCase().includes(q),
-    );
-  }, [query]);
+    return ANIME_TITLES.map((title, index) => ({ title, index }))
+      .filter(({ title }) => !q || title.toLowerCase().includes(q))
+      .sort((a, b) => countOf(b.title) - countOf(a.title));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, postCounts]);
 
   const setField = <K extends keyof OnboardingProfile>(key: K, value: OnboardingProfile[K]) => {
     setProfile((current) => ({ ...current, [key]: value }));
@@ -92,18 +106,13 @@ export function TasteLanding({ onComplete }: Props) {
     );
   };
 
-  const canContinue =
-    step === 0
-      ? Boolean(profile.residence && profile.gender && profile.age && profile.orientations.length)
-      : step === 1
-        ? Boolean(profile.contentTypes.length && profile.relationships.length)
-        : step === 2
-          ? Boolean(profile.characterGenders.length && profile.characterAges.length && profile.characterTraits.length)
-          : selected.length > 0;
+  // This onboarding is experimental, so no step should block progress — users
+  // can skip ahead having filled in as little (or as much) as they like.
+  const canContinue = true;
 
   const finish = () => {
     const workIds = selected
-      .map((index) => WORKS[index]?.id)
+      .map((index) => WORK_ID_BY_TITLE.get(ANIME_TITLES[index]))
       .filter((id): id is string => Boolean(id));
     onComplete({ workIds, profile });
   };

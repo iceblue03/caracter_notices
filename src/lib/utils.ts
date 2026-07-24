@@ -40,3 +40,12 @@ export function colorFromString(s: string): string {
   const hue = Math.abs(hash) % 360;
   return `hsl(${hue} 62% 52%)`;
 }
+
+/** Strip raw URLs from post text — "원본 보기" already links to the source. */
+export function stripLinks(text: string): string {
+  return text
+    .replace(/https?:\/\/\S+/g, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}

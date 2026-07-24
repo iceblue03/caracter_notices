@@ -1,6 +1,7 @@
 import { Character, Work } from './types';
 import worksData from './works.json';
 import { ANIME_TITLES } from './animeTitles';
+import { getBackgroundImage } from './workBackgrounds';
 
 /**
  * The classifier taxonomy. `works.json` is the source of truth: a scaffolded
@@ -18,13 +19,23 @@ const CURATED_WORKS = worksData as Work[];
 // `works.json` contains the curated classifier data. Keep the rest of the CSV
 // selectable too; these entries can already match their exact title and can be
 // enriched with aliases/characters later without changing their stable id.
-const CSV_WORKS: Work[] = ANIME_TITLES.slice(CURATED_WORKS.length).map((title, offset) => ({
-  id: `csv${String(CURATED_WORKS.length + offset + 1).padStart(3, '0')}`,
-  title,
-  category: '기타 콘텐츠',
-  aliases: [],
-  characters: [],
-}));
+//
+// Curated titles don't sit in the same order as the CSV (some curated works
+// were entered out of sequence, and a few CSV titles were skipped entirely
+// during curation), so a positional slice would both silently drop titles
+// that happen to fall before the curated cutoff and duplicate titles that
+// happen to fall after it. Filtering by title instead keeps every CSV title
+// that isn't already represented by a curated work — no drops, no duplicates.
+const CURATED_TITLES = new Set(CURATED_WORKS.map((w) => w.title));
+const CSV_WORKS: Work[] = ANIME_TITLES.filter((title) => !CURATED_TITLES.has(title)).map(
+  (title, offset) => ({
+    id: `csv${String(CURATED_WORKS.length + offset + 1).padStart(3, '0')}`,
+    title,
+    category: '기타 콘텐츠',
+    aliases: [],
+    characters: [],
+  }),
+);
 
 export const WORKS = [...CURATED_WORKS, ...CSV_WORKS];
 
@@ -67,6 +78,7 @@ function toCharacter(work: Work, index: number): Character {
     emoji,
     color: gradient[1],
     gradient,
+    backgroundImage: getBackgroundImage(work.title),
     // Preserve the provided ordering as a popularity hint (earlier = higher).
     popularity: WORKS.length - index,
     tagline: repNames.length
