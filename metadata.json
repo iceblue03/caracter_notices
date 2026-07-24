@@ -1,6 +1,6 @@
 {
-  "name": "Goods Shop Aggregator",
-  "description": "A service that aggregates news and updates from various character and goods shops' social media.",
+  "name": "OshiNoti · 캐릭터 소식 피드",
+  "description": "A subscription feed for anime fandoms: pick your favorite characters and see only the SNS posts about them, aggregated and filtered per character.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
