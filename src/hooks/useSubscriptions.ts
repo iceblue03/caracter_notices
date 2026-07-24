@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 // Bumped to v2 when the taxonomy switched from anime characters to works,
 // so old character-id subscriptions in storage are discarded.
-const STORAGE_KEY = 'oshinoti.subscriptions.v2';
+const STORAGE_KEY = 'ojosama.subscriptions.v2';
+const LEGACY_STORAGE_KEY = 'oshinoti.subscriptions.v2';
 
 // Works a first-time visitor starts with, so the feed isn't empty.
 // (w001 원피스 · w031 체인소맨 · w071 주술회전 — the pre-filled examples;
@@ -11,7 +12,7 @@ const DEFAULT_SUBSCRIPTIONS = ['w001', 'w031', 'w071', 'misc'];
 
 function load(): string[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {
     /* ignore malformed storage */
@@ -47,5 +48,9 @@ export function useSubscriptions() {
     setIds((prev) => prev.filter((x) => x !== id));
   }, []);
 
-  return { ids, isSubscribed, toggle, subscribe, unsubscribe };
+  const replace = useCallback((nextIds: string[]) => {
+    setIds([...new Set(nextIds)]);
+  }, []);
+
+  return { ids, isSubscribed, toggle, subscribe, unsubscribe, replace };
 }

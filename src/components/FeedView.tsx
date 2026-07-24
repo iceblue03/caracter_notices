@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RefreshCw, Loader2, Compass, Radio, Inbox } from 'lucide-react';
 import { Character, FeedPost } from '../types';
 import { PostCard } from './PostCard';
@@ -32,7 +32,11 @@ export function FeedView({
     return posts.filter((p) => p.matches?.some((m) => m.characterId === filter));
   }, [posts, filter]);
 
-  const subscribedIds = subscribed.map((c) => c.id);
+  const subscribedIds = useMemo(() => subscribed.map((c) => c.id), [subscribed]);
+
+  useEffect(() => {
+    if (filter !== 'all' && !subscribedIds.includes(filter)) setFilter('all');
+  }, [filter, subscribedIds]);
 
   if (subscribed.length === 0) {
     return (
@@ -75,7 +79,11 @@ export function FeedView({
           전체
         </FilterPill>
         {subscribed.map((c) => (
-          <FilterPill key={c.id} active={filter === c.id} onClick={() => setFilter(c.id)}>
+          <FilterPill
+            key={c.id}
+            active={filter === c.id}
+            onClick={() => setFilter((current) => (current === c.id ? 'all' : c.id))}
+          >
             <CharacterAvatar character={c} size={24} />
             {c.name}
           </FilterPill>

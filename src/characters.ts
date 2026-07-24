@@ -1,5 +1,6 @@
 import { Character, Work } from './types';
 import worksData from './works.json';
+import { ANIME_TITLES } from './animeTitles';
 
 /**
  * The classifier taxonomy. `works.json` is the source of truth: a scaffolded
@@ -12,7 +13,20 @@ import worksData from './works.json';
  * plus the work title itself (via `name`). This means a work matches posts even
  * before its aliases/characters are filled in.
  */
-export const WORKS = worksData as Work[];
+const CURATED_WORKS = worksData as Work[];
+
+// `works.json` contains the curated classifier data. Keep the rest of the CSV
+// selectable too; these entries can already match their exact title and can be
+// enriched with aliases/characters later without changing their stable id.
+const CSV_WORKS: Work[] = ANIME_TITLES.slice(CURATED_WORKS.length).map((title, offset) => ({
+  id: `csv${String(CURATED_WORKS.length + offset + 1).padStart(3, '0')}`,
+  title,
+  category: '기타 콘텐츠',
+  aliases: [],
+  characters: [],
+}));
+
+export const WORKS = [...CURATED_WORKS, ...CSV_WORKS];
 
 // Deterministic, copyright-safe visuals derived from the work id (stable across
 // reloads, no artwork involved).
@@ -48,7 +62,7 @@ function toCharacter(work: Work, index: number): Character {
     name: work.title,
     nameEn,
     series: work.category,
-    seriesEn: work.category === '게임' ? 'Game' : 'Anime',
+    seriesEn: work.category === '게임' ? 'Game' : work.category === '애니메이션' ? 'Anime' : 'Contents',
     role: repNames.length ? repNames.join(' · ') : '대표 캐릭터 미정',
     emoji,
     color: gradient[1],

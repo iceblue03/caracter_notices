@@ -9,9 +9,10 @@ interface Props {
   postCounts: Record<string, number>;
   onToggle: (id: string) => void;
   onOpen: (id: string) => void;
+  preferenceIds: string[];
 }
 
-export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen }: Props) {
+export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen, preferenceIds }: Props) {
   const [query, setQuery] = useState('');
 
   const q = query.trim().toLowerCase();
@@ -28,6 +29,23 @@ export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen }: Pro
     () => [...CHARACTERS].sort((a, b) => b.popularity - a.popularity).slice(0, 6),
     [],
   );
+  const recommended = useMemo(() => {
+    if (preferenceIds.length === 0) return trending;
+    const selectedIndexes = preferenceIds
+      .map((id) => CHARACTERS.findIndex((character) => character.id === id))
+      .filter((index) => index >= 0);
+    return [...CHARACTERS]
+      .filter((character) => character.id !== 'misc')
+      .sort((a, b) => {
+        const score = (character: Character) => {
+          const index = CHARACTERS.indexOf(character);
+          const distance = Math.min(...selectedIndexes.map((selected) => Math.abs(selected - index)));
+          return (preferenceIds.includes(character.id) ? 1000 : 0) + Math.max(0, 100 - distance) + character.popularity / 100;
+        };
+        return score(b) - score(a);
+      })
+      .slice(0, 6);
+  }, [preferenceIds, trending]);
   const seriesList = useMemo(() => getSeriesList(), []);
 
   const renderCard = (c: Character) => (
@@ -77,12 +95,12 @@ export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen }: Pro
         )
       ) : (
         <>
-          {/* Trending */}
+          {/* Taste recommendations */}
           <section className="mb-10">
             <h2 className="flex items-center gap-1.5 text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">
-              <TrendingUp size={15} className="text-fuchsia-500" /> 인기 캐릭터
+              <TrendingUp size={15} className="text-fuchsia-500" /> 내 취향 추천
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">{trending.map(renderCard)}</div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">{recommended.map(renderCard)}</div>
           </section>
 
           {/* By series */}

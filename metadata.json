@@ -1,5 +1,5 @@
 {
-  "name": "OshiNoti · 캐릭터 소식 피드",
+  "name": "오조사마 · 캐릭터 소식 피드",
   "description": "A subscription feed for anime fandoms: pick your favorite characters and see only the SNS posts about them, aggregated and filtered per character.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

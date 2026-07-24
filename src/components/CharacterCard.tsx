@@ -13,11 +13,11 @@ interface Props {
 
 export function CharacterCard({ character, subscribed, postCount, onToggle, onOpen }: Props) {
   return (
-    <div className="group relative bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 transition-shadow">
+    <div className="group relative bg-white border border-slate-200/80 rounded-2xl hover:shadow-lg hover:shadow-slate-200/60 transition-shadow">
       {/* Banner */}
       <button
         onClick={onOpen}
-        className="block w-full h-20 relative"
+        className="block w-full h-20 relative overflow-hidden rounded-t-2xl"
         style={{ background: gradientStyle(character.gradient) }}
         aria-label={`${character.name} 상세 보기`}
       >
@@ -26,8 +26,8 @@ export function CharacterCard({ character, subscribed, postCount, onToggle, onOp
         </span>
       </button>
 
-      <div className="px-4 pb-4 -mt-8">
-        <button onClick={onOpen} aria-label={`${character.name} 상세 보기`}>
+      <div className="relative z-10 px-4 pb-4 -mt-8">
+        <button className="relative z-10" onClick={onOpen} aria-label={`${character.name} 상세 보기`}>
           <CharacterAvatar character={character} size={56} ring />
         </button>
 

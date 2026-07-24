@@ -10,6 +10,7 @@ import { Sidebar } from './components/Sidebar';
 import { FeedView } from './components/FeedView';
 import { DiscoverView } from './components/DiscoverView';
 import { CharacterDetailView } from './components/CharacterDetailView';
+import { TasteLanding } from './components/TasteLanding';
 
 type View = { name: 'feed' } | { name: 'discover' } | { name: 'character'; id: string };
 
@@ -19,7 +20,15 @@ function dedupeById(posts: FeedPost[]): FeedPost[] {
 }
 
 export default function App() {
-  const { ids, isSubscribed, toggle } = useSubscriptions();
+  const { ids, isSubscribed, toggle, replace } = useSubscriptions();
+  const [onboarded, setOnboarded] = useState(() => localStorage.getItem('ojosama.onboarded') === 'true');
+  const [preferenceIds, setPreferenceIds] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ojosama.preferences') ?? '[]');
+    } catch {
+      return [];
+    }
+  });
   const [view, setView] = useState<View>({ name: 'feed' });
   const [livePosts, setLivePosts] = useState<FeedPost[]>([]);
   const [syncing, setSyncing] = useState(false);
@@ -91,6 +100,22 @@ export default function App() {
 
   const activeCharacterId = view.name === 'character' ? view.id : undefined;
 
+  if (!onboarded) {
+    return (
+      <TasteLanding
+        onComplete={({ workIds, profile }) => {
+          const nextIds = [...workIds, 'misc'];
+          replace(nextIds);
+          setPreferenceIds(workIds);
+          localStorage.setItem('ojosama.preferences', JSON.stringify(workIds));
+          localStorage.setItem('ojosama.profile', JSON.stringify(profile));
+          localStorage.setItem('ojosama.onboarded', 'true');
+          setOnboarded(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex">
       <Sidebar
@@ -108,7 +133,7 @@ export default function App() {
           <span className="grid place-items-center w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white">
             <Sparkles size={16} />
           </span>
-          <span className="font-extrabold tracking-tight">오시노티</span>
+          <span className="font-extrabold tracking-tight">오조사마</span>
         </button>
       </header>
 
@@ -132,6 +157,7 @@ export default function App() {
             postCounts={postCounts}
             onToggle={toggle}
             onOpen={openCharacter}
+            preferenceIds={preferenceIds}
           />
         )}
 

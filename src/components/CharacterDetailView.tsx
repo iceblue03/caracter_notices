@@ -28,7 +28,7 @@ export function CharacterDetailView({
   return (
     <div className="pb-10">
       {/* Hero */}
-      <div className="relative h-40 sm:h-52" style={{ background: gradientStyle(character.gradient) }}>
+      <div className="relative z-0 h-40 sm:h-52" style={{ background: gradientStyle(character.gradient) }}>
         <span className="absolute inset-0 grid place-items-center text-[10rem] opacity-15 text-white select-none">
           {character.emoji}
         </span>
@@ -40,7 +40,7 @@ export function CharacterDetailView({
         </button>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
         {/* Avatar + subscribe overlap the banner; identity flows below it. */}
         <div className="-mt-12 flex items-end justify-between gap-3">
           <CharacterAvatar character={character} size={92} ring />

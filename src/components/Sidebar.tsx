@@ -29,8 +29,8 @@ export function Sidebar({
           <Sparkles size={18} />
         </span>
         <span className="text-left leading-none">
-          <span className="block text-lg font-extrabold tracking-tight text-slate-900">오시노티</span>
-          <span className="block text-[11px] text-slate-400 font-medium mt-0.5">OshiNoti</span>
+          <span className="block text-lg font-extrabold tracking-tight text-slate-900">오조사마</span>
+          <span className="block text-[11px] text-slate-400 font-medium mt-0.5">Ojosama</span>
         </span>
       </button>
 

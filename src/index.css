@@ -23,3 +23,47 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+.field-control {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  color: #0f172a;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 150ms, box-shadow 150ms, background-color 150ms;
+}
+.field-control:focus {
+  border-color: #a78bfa;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(139 92 246 / 0.1);
+}
+.field-control::placeholder {
+  color: #64748b;
+}
+.field-control-search {
+  padding-left: 2.75rem;
+}
+.field-control-search:not(:placeholder-shown) {
+  padding-left: 1rem;
+}
+.field-control option {
+  color: #0f172a;
+}
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #c4b5fd #f1f5f9;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 7px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 999px;
+}
