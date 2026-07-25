@@ -9,9 +9,32 @@ interface Props {
   className?: string;
 }
 
-/** Copyright-safe character avatar: a gradient disc with the character's emoji. */
+/** Character avatar: displays profile image if available, otherwise emoji on gradient. */
 export function CharacterAvatar({ character, size = 44, onClick, ring, className }: Props) {
   const Tag = onClick ? 'button' : 'div';
+
+  if (character.avatarImage) {
+    return (
+      <Tag
+        onClick={onClick}
+        title={character.name}
+        className={`shrink-0 rounded-full overflow-hidden flex-shrink-0 select-none ${
+          onClick ? 'cursor-pointer transition-transform hover:scale-105 active:scale-95' : ''
+        } ${ring ? 'ring-2 ring-white shadow-md' : ''} ${className ?? ''}`}
+        style={{
+          width: size,
+          height: size,
+        }}
+      >
+        <img
+          src={character.avatarImage}
+          alt={character.name}
+          className="w-full h-full object-cover"
+        />
+      </Tag>
+    );
+  }
+
   return (
     <Tag
       onClick={onClick}

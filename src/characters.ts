@@ -3,6 +3,7 @@ import worksData from './works.json';
 import characterFillsData from './characterFills.json';
 import { ANIME_TITLES } from './animeTitles';
 import { getBackgroundImage } from './workBackgrounds';
+import { getAvatarImage } from './workAvatars';
 
 /**
  * The classifier taxonomy. `works.json` is the source of truth: a scaffolded
@@ -105,6 +106,7 @@ function toCharacter(work: Work, index: number): Character {
     color: gradient[1],
     gradient,
     backgroundImage: getBackgroundImage(work.title),
+    avatarImage: getAvatarImage(work.title),
     // Preserve the provided ordering as a popularity hint (earlier = higher).
     popularity: WORKS.length - index,
     tagline: repNames.length

@@ -61,6 +61,8 @@ export interface Character {
   gradient: [string, string]; // avatar background gradient
   /** Real artwork for the card/detail banner, when available (falls back to the gradient). */
   backgroundImage?: string;
+  /** Profile image (avatar) for the work, when available. */
+  avatarImage?: string;
   /** Popularity hint used for "인기 캐릭터" ordering (higher = more popular). */
   popularity: number;
   tagline: string;     // one-line flavour text
