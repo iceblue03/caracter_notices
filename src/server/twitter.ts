@@ -32,12 +32,14 @@ export const SOURCE_ACCOUNTS = (process.env.SCRAPE_ACCOUNTS
   : DEFAULT_ACCOUNTS);
 
 // Which Apify X/Twitter actor to use, and how many tweets per account. Both are
-// env-overridable so you can swap actors (e.g. if one blocks free-plan API) or
-// raise the count on a paid plan without code changes. apidojo/tweet-scraper
-// was confirmed by the project owner directly on Apify Store; the per-account
-// item cap defaults conservatively to keep credit usage predictable across 49
-// accounts.
-const TWITTER_ACTOR = process.env.APIFY_TWITTER_ACTOR || 'apidojo/tweet-scraper';
+// env-overridable so you can swap actors or raise the count on a paid plan
+// without code changes. apidojo/tweet-scraper (suggested as an alternative)
+// was tried and confirmed via a real run to reject ALL API/SDK calls on the
+// free Apify plan ("subscribe to a paid plan..."), so the default stays on
+// parseforge/x-com-scraper, which the existing seed data proves works there.
+// If you're on a paid Apify plan, override with APIFY_TWITTER_ACTOR to try
+// apidojo/tweet-scraper or another actor instead.
+const TWITTER_ACTOR = process.env.APIFY_TWITTER_ACTOR || 'parseforge/x-com-scraper';
 const PER_ACCOUNT = Number(process.env.SCRAPE_PER_ACCOUNT) || 10;
 
 /** Best-effort extraction of a tweet's first image across possible shapes. */
