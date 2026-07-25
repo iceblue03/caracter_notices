@@ -1,23 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Home, Compass, Sparkles } from 'lucide-react';
+import { Home, Compass, Sparkles, ShoppingBag } from 'lucide-react';
 import { CHARACTERS, getCharacter } from './characters';
-import { SAMPLE_POSTS } from './data';
+import { SAMPLE_POSTS, SAMPLE_GOODS } from './data';
 import { resolveFeaturedEvents } from './events';
-import { annotatePost } from './lib/matching';
-import { syncLiveFeed } from './lib/api';
-import { Character, FeedPost } from './types';
+import { annotatePost, annotateGoods } from './lib/matching';
+import { syncLiveFeed, syncGoods } from './lib/api';
+import { Character, FeedPost, GoodsListing } from './types';
 import { useSubscriptions } from './hooks/useSubscriptions';
 import { Sidebar } from './components/Sidebar';
 import { FeedView } from './components/FeedView';
+import { GoodsView } from './components/GoodsView';
 import { DiscoverView } from './components/DiscoverView';
 import { CharacterDetailView } from './components/CharacterDetailView';
 import { TasteLanding } from './components/TasteLanding';
 
-type View = { name: 'feed' } | { name: 'discover' } | { name: 'character'; id: string };
+type View =
+  | { name: 'feed' }
+  | { name: 'discover' }
+  | { name: 'goods'; characterId?: string }
+  | { name: 'character'; id: string };
 
-function dedupeById(posts: FeedPost[]): FeedPost[] {
+function dedupeById<T extends { id: string }>(items: T[]): T[] {
   const seen = new Set<string>();
-  return posts.filter((p) => (seen.has(p.id) ? false : (seen.add(p.id), true)));
+  return items.filter((p) => (seen.has(p.id) ? false : (seen.add(p.id), true)));
 }
 
 export default function App() {
@@ -34,6 +39,10 @@ export default function App() {
   const [livePosts, setLivePosts] = useState<FeedPost[]>([]);
   const [live, setLive] = useState(false);
   const [syncNote, setSyncNote] = useState<string | undefined>();
+  const [goodsListings, setGoodsListings] = useState<GoodsListing[]>([]);
+  const [goodsLive, setGoodsLive] = useState(false);
+  const [goodsSyncing, setGoodsSyncing] = useState(false);
+  const [goodsSyncNote, setGoodsSyncNote] = useState<string | undefined>();
 
   const subscribedCharacters = useMemo(
     () => ids.map(getCharacter).filter((c): c is Character => Boolean(c)),
@@ -68,6 +77,28 @@ export default function App() {
     return counts;
   }, [annotatedPosts]);
 
+  // Every known goods listing (live + bundled snapshot), annotated with the
+  // characters it's about — same merge shape as annotatedPosts.
+  const annotatedGoods = useMemo(() => {
+    const all = dedupeById([...goodsListings, ...SAMPLE_GOODS]);
+    return all
+      .map((g) => annotateGoods(g, CHARACTERS))
+      .sort((a, b) => b.timestamp - a.timestamp);
+  }, [goodsListings]);
+
+  // Goods grouped by character id, so FeedView/CharacterDetailView can mix in
+  // "this character's listings" without re-filtering the whole list each time.
+  const goodsByCharacter = useMemo(() => {
+    const byId: Record<string, GoodsListing[]> = {};
+    for (const g of annotatedGoods) {
+      for (const m of g.matches ?? []) {
+        if (m.characterId === 'misc') continue;
+        (byId[m.characterId] ??= []).push(g);
+      }
+    }
+    return byId;
+  }, [annotatedGoods]);
+
   // Loads whatever's already cached — syncing is stopped, so this never
   // triggers a new scrape (see syncLiveFeed's `force` contract).
   const loadCachedFeed = useCallback(async () => {
@@ -83,13 +114,52 @@ export default function App() {
     }
   }, [ids]);
 
+  // Same idea as loadCachedFeed, but for goods — auto-load never scrapes.
+  const loadCachedGoods = useCallback(async () => {
+    const result = await syncGoods(false);
+    if (result.live) {
+      setGoodsLive(true);
+      setGoodsSyncNote(undefined);
+      setGoodsListings(result.listings);
+    } else if (result.reason === 'no-token') {
+      setGoodsSyncNote('APIFY_API_TOKEN이 설정되지 않아, 아직 굿즈 매물을 가져올 수 없어요.');
+    }
+  }, []);
+
   useEffect(() => {
     loadCachedFeed();
+    loadCachedGoods();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Manual "새로고침" in the Goods tab — the only user-triggered scrape in the
+  // app (goods starts with an empty seed, unlike the news feed, so it needs
+  // one). Still cost-guarded server-side (FORCE_MIN_MS), so mashing the
+  // button can't run away with Apify spend.
+  const refreshGoods = useCallback(async () => {
+    setGoodsSyncing(true);
+    try {
+      const result = await syncGoods(true);
+      if (result.live) {
+        setGoodsLive(true);
+        setGoodsSyncNote(undefined);
+        setGoodsListings(result.listings);
+      } else if (result.reason === 'no-token') {
+        setGoodsSyncNote('APIFY_API_TOKEN이 설정되지 않아, 아직 굿즈 매물을 가져올 수 없어요.');
+      } else if (result.error) {
+        setGoodsSyncNote(`매물을 가져오지 못했어요: ${result.error}`);
+      }
+    } finally {
+      setGoodsSyncing(false);
+    }
   }, []);
 
   const goFeed = useCallback(() => setView({ name: 'feed' }), []);
   const goDiscover = useCallback(() => setView({ name: 'discover' }), []);
+  const openGoods = useCallback((characterId?: string) => {
+    setView({ name: 'goods', characterId });
+    window.scrollTo({ top: 0 });
+  }, []);
   const openCharacter = useCallback((id: string) => {
     setView({ name: 'character', id });
     window.scrollTo({ top: 0 });
@@ -121,6 +191,7 @@ export default function App() {
         subscribed={subscribedCharacters}
         onFeed={goFeed}
         onDiscover={goDiscover}
+        onGoods={() => openGoods()}
         onSelectCharacter={openCharacter}
       />
 
@@ -139,11 +210,13 @@ export default function App() {
           <FeedView
             subscribed={subscribedCharacters}
             posts={feedPosts}
+            goodsByCharacter={goodsByCharacter}
             events={featuredEvents}
             live={live}
             syncNote={syncNote}
             onSelectCharacter={openCharacter}
             onDiscover={goDiscover}
+            onOpenGoods={openGoods}
           />
         )}
 
@@ -154,6 +227,18 @@ export default function App() {
             onToggle={toggle}
             onOpen={openCharacter}
             preferenceIds={preferenceIds}
+          />
+        )}
+
+        {view.name === 'goods' && (
+          <GoodsView
+            listings={annotatedGoods}
+            live={goodsLive}
+            syncing={goodsSyncing}
+            syncNote={goodsSyncNote}
+            initialCharacterId={view.characterId}
+            onRefresh={refreshGoods}
+            onSelectCharacter={openCharacter}
           />
         )}
 
@@ -168,10 +253,12 @@ export default function App() {
               <CharacterDetailView
                 character={character}
                 posts={posts}
+                goods={goodsByCharacter[character.id] ?? []}
                 subscribed={isSubscribed(character.id)}
                 subscribedIds={ids}
                 onToggle={() => toggle(character.id)}
                 onSelectCharacter={openCharacter}
+                onOpenGoods={openGoods}
                 onBack={() => setView({ name: 'feed' })}
               />
             );
@@ -191,6 +278,12 @@ export default function App() {
           icon={<Compass size={21} />}
           label="탐색"
           onClick={goDiscover}
+        />
+        <MobileTab
+          active={view.name === 'goods'}
+          icon={<ShoppingBag size={21} />}
+          label="굿즈"
+          onClick={() => openGoods()}
         />
       </nav>
     </div>

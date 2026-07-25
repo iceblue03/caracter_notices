@@ -3,32 +3,14 @@ import express from "express";
 import path from "path";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { createServer as createViteServer } from "vite";
-import { ApifyClient } from "apify-client";
 import cors from "cors";
 import { CHARACTERS } from "./src/characters";
-import { annotatePost } from "./src/lib/matching";
-import type { FeedPost, Platform } from "./src/types";
-
-// ── Source accounts (X / Twitter) ─────────────────────────────────────────
-// A fixed, global set of goods/event/brand accounts to scrape. One populate
-// covers everyone, so results are shared regardless of who is subscribed.
-// Override with SCRAPE_ACCOUNTS="handle1,handle2" (handy for cheap testing).
-const DEFAULT_ACCOUNTS = [
-  "genso_journey", "otakumanmulsang", "THorch_KR", "Axez18", "gundam_info",
-  "BandaiNamcoKR", "BNKRmall", "comicw", "illustar_fes", "ProjMoonStudio",
-  "hamazi__", "animateonlineKR", "Pokemon", "PokemonGoApp", "pokemonkrmkt",
-  "AmiAmi_Korean", "megabox_plusm", "dokidokigoods2",
-];
-const SOURCE_ACCOUNTS = (process.env.SCRAPE_ACCOUNTS
-  ? process.env.SCRAPE_ACCOUNTS.split(",").map((s) => s.trim()).filter(Boolean)
-  : DEFAULT_ACCOUNTS);
-
-// Which Apify X/Twitter actor to use, and how many tweets per account. Both are
-// env-overridable so you can swap actors (e.g. if one blocks free-plan API) or
-// raise the count on a paid plan without code changes. The free plan caps the
-// actor at 10 items per run, so PER_ACCOUNT defaults to 10.
-const TWITTER_ACTOR = process.env.APIFY_TWITTER_ACTOR || "parseforge/x-com-scraper";
-const PER_ACCOUNT = Number(process.env.SCRAPE_PER_ACCOUNT) || 10;
+import { annotatePost, annotateGoods } from "./src/lib/matching";
+import { scrapeTwitter, mergeFeedPosts } from "./src/server/twitter";
+import { scrapeGoods, mergeGoodsListings } from "./src/server/goods";
+import { translateText } from "./src/server/translate";
+import { fetchProxiedImage } from "./src/server/imageProxy";
+import type { FeedPost, GoodsListing } from "./src/types";
 
 // A manual "refresh" can trigger a new scrape at most this often (env-tunable).
 const FORCE_MIN_MS = process.env.SCRAPE_FORCE_MIN_MS != null
@@ -41,130 +23,65 @@ const FORCE_MIN_MS = process.env.SCRAPE_FORCE_MIN_MS != null
 // so "pull once" holds and the same tweet is never fetched/stored twice.
 // A manual refresh may scrape at most once per FORCE_MIN_MS; concurrent
 // requests join the single in-flight scrape instead of launching their own.
-const STORE_PATH = path.join(process.cwd(), "data", "feed-store.json");
-let feedCache: { posts: FeedPost[]; ts: number } | null = null;
-let inflight: Promise<FeedPost[]> | null = null;
+const FEED_STORE_PATH = path.join(process.cwd(), "data", "feed-store.json");
+const GOODS_STORE_PATH = path.join(process.cwd(), "data", "goods-store.json");
 
-function loadStore(): void {
+let feedCache: { posts: FeedPost[]; ts: number } | null = null;
+let feedInflight: Promise<FeedPost[]> | null = null;
+let goodsCache: { listings: GoodsListing[]; ts: number } | null = null;
+let goodsInflight: Promise<GoodsListing[]> | null = null;
+
+function loadJsonStore<T>(storePath: string, key: string): { data: T[]; ts: number } | null {
   try {
-    const data = JSON.parse(readFileSync(STORE_PATH, "utf8"));
-    if (Array.isArray(data?.posts)) {
-      feedCache = { posts: data.posts as FeedPost[], ts: Number(data.ts) || 0 };
-      console.log(`[store] loaded ${feedCache.posts.length} saved posts from disk`);
+    const parsed = JSON.parse(readFileSync(storePath, "utf8"));
+    if (Array.isArray(parsed?.[key])) {
+      return { data: parsed[key] as T[], ts: Number(parsed.ts) || 0 };
     }
   } catch {
     /* no store yet — first run */
   }
+  return null;
 }
 
-function saveStore(): void {
+function saveJsonStore(storePath: string, key: string, data: unknown[], ts: number): void {
   try {
-    mkdirSync(path.dirname(STORE_PATH), { recursive: true });
-    writeFileSync(
-      STORE_PATH,
-      JSON.stringify({ posts: feedCache?.posts ?? [], ts: feedCache?.ts ?? Date.now() }, null, 2),
-    );
+    mkdirSync(path.dirname(storePath), { recursive: true });
+    writeFileSync(storePath, JSON.stringify({ [key]: data, ts }, null, 2));
   } catch (error) {
-    console.error("[store] save failed:", error);
+    console.error(`[store] save failed (${storePath}):`, error);
   }
 }
 
-/** Best-effort extraction of a tweet's first image across possible shapes. */
-function extractImage(t: any): string | undefined {
-  const candidates = [
-    t?.extendedEntities?.media?.[0]?.media_url_https,
-    t?.entities?.media?.[0]?.media_url_https,
-    t?.media?.[0]?.media_url_https,
-    t?.media?.[0]?.url,
-    Array.isArray(t?.mediaUrls) ? t.mediaUrls[0] : undefined,
-    Array.isArray(t?.photos) ? (t.photos[0]?.url ?? t.photos[0]) : undefined,
-  ];
-  return candidates.find((u) => typeof u === "string" && u.startsWith("http"));
-}
-
-/** Parse a timestamp that may be ISO string, epoch ms, or epoch seconds. */
-function parseTimestamp(v: any): number {
-  if (typeof v === "number") return v < 1e12 ? v * 1000 : v;
-  if (typeof v === "string") {
-    const n = Number(v);
-    if (!isNaN(n)) return n < 1e12 ? n * 1000 : n;
-    const t = new Date(v).getTime();
-    if (!isNaN(t)) return t;
+function loadStores(): void {
+  const feed = loadJsonStore<FeedPost>(FEED_STORE_PATH, "posts");
+  if (feed) {
+    feedCache = { posts: feed.data, ts: feed.ts };
+    console.log(`[store] loaded ${feed.data.length} saved posts from disk`);
   }
-  return Date.now();
-}
-
-/** Convert one raw actor item into a FeedPost, or null if it isn't a tweet. */
-function toFeedPost(t: any): FeedPost | null {
-  if (!t || t.type === "mock_tweet" || t.noResults || t.error) return null;
-  const id = String(t.id ?? t.id_str ?? t.tweetId ?? t.rest_id ?? "");
-  if (!id) return null;
-  const author = t.author ?? t.user ?? {};
-  const userName =
-    author.userName ?? author.screen_name ?? author.username ?? t.username ?? "unknown";
-  return {
-    id,
-    author: author.name || author.displayName || userName,
-    platform: "twitter" as Platform,
-    handle: `@${userName}`,
-    avatarUrl:
-      author.profilePicture ||
-      author.profile_image_url_https ||
-      author.profileImageUrl ||
-      `https://api.dicebear.com/7.x/shapes/svg?seed=${userName}`,
-    content: t.text ?? t.full_text ?? t.fullText ?? t.content ?? "",
-    imageUrl: extractImage(t),
-    timestamp: parseTimestamp(t.createdAt ?? t.created_at ?? t.timestamp ?? t.date),
-    link: t.tweetUrl || t.url || t.twitterUrl || `https://x.com/${userName}/status/${id}`,
-    source: "live" as const,
-  };
-}
-
-/**
- * Scrape each source account via a configurable Apify actor. One run per
- * account, because the free plan caps a run at ~10 items — looping is how we
- * cover every account. A single account's failure doesn't abort the rest.
- */
-async function scrapeTwitter(token: string): Promise<FeedPost[]> {
-  const client = new ApifyClient({ token });
-  console.log(`Scraping ${SOURCE_ACCOUNTS.length} handles via "${TWITTER_ACTOR}" (${PER_ACCOUNT}/account)`);
-  const posts: FeedPost[] = [];
-  for (const handle of SOURCE_ACCOUNTS) {
-    try {
-      const run = await client.actor(TWITTER_ACTOR).call({
-        usernames: [handle],
-        twitterHandles: [handle],
-        maxItems: PER_ACCOUNT,
-        maxTweets: PER_ACCOUNT,
-        sort: "Latest",
-      });
-      const { items } = await client.dataset(run.defaultDatasetId).listItems();
-      let n = 0;
-      for (const t of items as any[]) {
-        const p = toFeedPost(t);
-        if (p) {
-          posts.push(p);
-          n += 1;
-        }
-      }
-      console.log(`  @${handle}: ${n} tweets`);
-    } catch (error: any) {
-      console.error(`  @${handle}: failed — ${error?.message || error}`);
-    }
+  const goods = loadJsonStore<GoodsListing>(GOODS_STORE_PATH, "listings");
+  if (goods) {
+    goodsCache = { listings: goods.data, ts: goods.ts };
+    console.log(`[store] loaded ${goods.data.length} saved goods listings from disk`);
   }
-  return posts;
 }
 
 /** Scrape, then merge NEW tweets into the persistent store (dedup by id). */
-async function scrapeAndStore(token: string): Promise<FeedPost[]> {
+async function scrapeAndStoreFeed(token: string): Promise<FeedPost[]> {
   const fresh = await scrapeTwitter(token);
-  const existing = feedCache?.posts ?? [];
-  const seen = new Set(existing.map((p) => p.id));
-  const added = fresh.filter((p) => !seen.has(p.id));
-  const merged = [...added, ...existing].sort((a, b) => b.timestamp - a.timestamp);
+  const { merged, addedCount } = mergeFeedPosts(feedCache?.posts ?? [], fresh);
   feedCache = { posts: merged, ts: Date.now() };
-  saveStore();
-  console.log(`[scrape] +${added.length} new tweets (total stored: ${merged.length})`);
+  saveJsonStore(FEED_STORE_PATH, "posts", merged, feedCache.ts);
+  console.log(`[scrape] +${addedCount} new tweets (total stored: ${merged.length})`);
+  return merged;
+}
+
+/** Scrape, then merge NEW goods listings into the persistent store (dedup by id). */
+async function scrapeAndStoreGoods(token: string): Promise<GoodsListing[]> {
+  const fresh = await scrapeGoods(token);
+  const { merged, addedCount } = mergeGoodsListings(goodsCache?.listings ?? [], fresh);
+  goodsCache = { listings: merged, ts: Date.now() };
+  saveJsonStore(GOODS_STORE_PATH, "listings", merged, goodsCache.ts);
+  console.log(`[scrape] +${addedCount} new goods listings (total stored: ${merged.length})`);
   return merged;
 }
 
@@ -173,7 +90,7 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 3000;
 
   // Load any previously scraped posts so restarts reuse them (no re-scrape).
-  loadStore();
+  loadStores();
 
   app.use(cors());
   app.use(express.json());
@@ -187,23 +104,13 @@ async function startServer() {
       return res.status(400).send("URL is required");
     }
     try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-          'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-          'Referer': 'https://www.instagram.com/',
-        }
-      });
-      if (!response.ok) {
-        return res.status(response.status).send(response.statusText);
+      const result = await fetchProxiedImage(url);
+      if (!result.ok) {
+        return res.status(result.status).send(result.statusText);
       }
-
-      const contentType = response.headers.get('content-type') || 'image/jpeg';
-      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Type', result.contentType!);
       res.setHeader('Cache-Control', 'public, max-age=86400');
-
-      const buffer = await response.arrayBuffer();
-      res.send(Buffer.from(buffer));
+      res.send(result.buffer);
     } catch (error) {
       console.error("[image-proxy] Error:", error);
       res.status(500).send("Failed to fetch image");
@@ -251,8 +158,8 @@ async function startServer() {
     // Manual refresh path.
     try {
       // A scrape is already running → join it instead of launching another.
-      if (inflight) {
-        const raw = await inflight;
+      if (feedInflight) {
+        const raw = await feedInflight;
         return res.json({ posts: respond(raw), live: true, cached: true });
       }
       // Cache still fresh enough → don't scrape again yet.
@@ -261,10 +168,10 @@ async function startServer() {
       }
       // Otherwise, launch a single scrape that everyone shares. It merges any
       // new tweets into the persistent store (dedup by id) and updates feedCache.
-      inflight = scrapeAndStore(token).finally(() => {
-        inflight = null;
+      feedInflight = scrapeAndStoreFeed(token).finally(() => {
+        feedInflight = null;
       });
-      const raw = await inflight;
+      const raw = await feedInflight;
       const posts = respond(raw);
       const classified = posts.filter((p) => p.matches!.some((m) => m.characterId !== "misc")).length;
       console.log(`Classified ${classified}/${posts.length} posts to a specific work (rest → 기타)`);
@@ -283,6 +190,59 @@ async function startServer() {
     }
   });
 
+  // ── Goods sync (당근마켓 · 번개장터, via Apify) ─────────────────────────
+  // Same shape/cost-guard contract as /api/feed/sync above, just for
+  // marketplace listings instead of tweets. See src/server/goods.ts for the
+  // scraping details (and its caveats — the selectors there are unverified).
+  app.post("/api/goods/sync", async (req, res) => {
+    const token = process.env.APIFY_API_TOKEN;
+    const { force } = req.body as { force?: boolean };
+
+    const respond = (listings: GoodsListing[]): GoodsListing[] =>
+      listings
+        .map((listing) => annotateGoods(listing, CHARACTERS))
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+    if (!token) {
+      return res.json({ listings: [], live: false, reason: "no-token" });
+    }
+
+    const now = Date.now();
+    const cacheAge = goodsCache ? now - goodsCache.ts : Infinity;
+
+    if (force !== true) {
+      if (goodsCache) {
+        return res.json({ listings: respond(goodsCache.listings), live: true, cached: true });
+      }
+      return res.json({ listings: [], live: false, reason: "idle" });
+    }
+
+    try {
+      if (goodsInflight) {
+        const raw = await goodsInflight;
+        return res.json({ listings: respond(raw), live: true, cached: true });
+      }
+      if (goodsCache && cacheAge < FORCE_MIN_MS) {
+        return res.json({ listings: respond(goodsCache.listings), live: true, cached: true });
+      }
+      goodsInflight = scrapeAndStoreGoods(token).finally(() => {
+        goodsInflight = null;
+      });
+      const raw = await goodsInflight;
+      return res.json({ listings: respond(raw), live: true });
+    } catch (error: any) {
+      console.error("Apify goods scrape error:", error);
+      if (goodsCache) {
+        return res.json({ listings: respond(goodsCache.listings), live: true, stale: true });
+      }
+      return res.status(502).json({
+        listings: [],
+        live: false,
+        error: error.message || "Failed to fetch goods from Apify",
+      });
+    }
+  });
+
   // ── Post translation ────────────────────────────────────────────────────
   // Uses Google's free, unofficial "gtx" translate endpoint (the same one
   // browser extensions use) — no API key or billing account needed. It's
@@ -293,28 +253,8 @@ async function startServer() {
     if (!text) {
       return res.status(400).json({ translated: null, error: "text required" });
     }
-    try {
-      const params = new URLSearchParams({
-        client: "gtx",
-        sl: "auto",
-        tl: target || "ko",
-        dt: "t",
-        q: text,
-      });
-      const response = await fetch(`https://translate.googleapis.com/translate_a/single?${params}`);
-      if (!response.ok) {
-        throw new Error(`translate endpoint responded ${response.status}`);
-      }
-      const data = (await response.json()) as any;
-      const translated = (data?.[0] ?? [])
-        .map((chunk: any) => chunk?.[0] ?? "")
-        .join("")
-        .trim();
-      res.json({ translated: translated || null });
-    } catch (error: any) {
-      console.error("[translate] Error:", error);
-      res.json({ translated: null, error: error.message || "translation failed" });
-    }
+    const result = await translateText(text, target || "ko");
+    res.json(result);
   });
 
   // ── Vite / static hosting ──────────────────────────────────────────────

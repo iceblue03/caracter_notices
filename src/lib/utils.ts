@@ -49,3 +49,9 @@ export function stripLinks(text: string): string {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
+
+/** Format a KRW price for a goods card, e.g. "25,000원". Falls back to a raw label (나눔, 가격제안) when there's no parsed number. */
+export function formatPrice(price: number | null, label?: string): string {
+  if (price != null) return `${price.toLocaleString('ko-KR')}원`;
+  return label || '가격 문의';
+}

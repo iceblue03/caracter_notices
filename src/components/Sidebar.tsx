@@ -1,8 +1,8 @@
-import { Home, Compass, Plus, Sparkles } from 'lucide-react';
+import { Home, Compass, Plus, Sparkles, ShoppingBag } from 'lucide-react';
 import { Character } from '../types';
 import { CharacterAvatar } from './CharacterAvatar';
 
-type Active = 'feed' | 'discover' | 'character';
+type Active = 'feed' | 'discover' | 'goods' | 'character';
 
 interface Props {
   active: Active;
@@ -10,6 +10,7 @@ interface Props {
   subscribed: Character[];
   onFeed: () => void;
   onDiscover: () => void;
+  onGoods: () => void;
   onSelectCharacter: (id: string) => void;
 }
 
@@ -19,6 +20,7 @@ export function Sidebar({
   subscribed,
   onFeed,
   onDiscover,
+  onGoods,
   onSelectCharacter,
 }: Props) {
   return (
@@ -42,6 +44,12 @@ export function Sidebar({
           label="캐릭터 탐색"
           active={active === 'discover'}
           onClick={onDiscover}
+        />
+        <NavItem
+          icon={<ShoppingBag size={19} />}
+          label="굿즈"
+          active={active === 'goods'}
+          onClick={onGoods}
         />
       </nav>
 

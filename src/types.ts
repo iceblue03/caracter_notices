@@ -1,5 +1,8 @@
 export type Platform = 'instagram' | 'twitter';
 
+/** Secondhand-goods marketplaces the Goods tab pulls listings from. */
+export type GoodsPlatform = 'danggeun' | 'bunjang';
+
 /**
  * A representative character of a work. `aliases` are the matching terms
  * (Korean/English/Japanese names & nicknames). Kept small — 2-3 per work.
@@ -73,5 +76,30 @@ export interface FeedPost {
   /** Where the post came from: bundled sample data vs. a live Apify sync. */
   source: 'sample' | 'live';
   /** Characters this post is about. Filled in by the matching layer. */
+  matches?: PostMatch[];
+}
+
+/**
+ * A secondhand-goods listing pulled from a marketplace (당근마켓 / 번개장터).
+ * Mirrors FeedPost's shape closely (id/link/timestamp/matches/source) so both
+ * can be sorted, filtered, and character-matched the same way.
+ */
+export interface GoodsListing {
+  id: string;
+  platform: GoodsPlatform;
+  title: string;
+  /** Price in KRW, when it parsed as a plain number. */
+  price: number | null;
+  /** Raw price text for listings that don't have a plain number (나눔, 가격제안, etc). */
+  priceLabel?: string;
+  description?: string;
+  imageUrl?: string;
+  /** Neighborhood/city the listing was posted from, when the source page exposed one. */
+  location?: string;
+  /** Epoch ms; best-effort (marketplace listing pages usually only show relative time). */
+  timestamp: number;
+  link: string;
+  source: 'sample' | 'live';
+  /** Characters this listing is about. Filled in by the matching layer. */
   matches?: PostMatch[];
 }
