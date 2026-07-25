@@ -1,10 +1,12 @@
 import { ArrowLeft, Check, Plus, Inbox, ShoppingBag, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 import { Character, FeedPost, GoodsListing } from '../types';
 import { getCharacter } from '../characters';
 import { catalogSubtitle, gradientStyle, relativeTime } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
 import { PostCard } from './PostCard';
 import { GoodsCard } from './GoodsCard';
+import { ImageViewer } from './ImageViewer';
 
 interface Props {
   character: Character;
@@ -29,6 +31,7 @@ export function CharacterDetailView({
   onOpenGoods,
   onBack,
 }: Props) {
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const latest = posts[0];
   const parentWork = character.kind === 'character' && character.workId
     ? getCharacter(character.workId)
@@ -38,8 +41,11 @@ export function CharacterDetailView({
   return (
     <div className="pb-10">
       {/* Hero */}
-      <div
-        className="relative z-0 h-40 sm:h-52"
+      <button
+        onClick={() => character.backgroundImage && setViewingImage(character.backgroundImage)}
+        className={`relative z-0 h-40 sm:h-52 w-full block ${
+          character.backgroundImage ? 'cursor-pointer group' : ''
+        }`}
         style={
           character.backgroundImage
             ? {
@@ -51,19 +57,22 @@ export function CharacterDetailView({
         }
       >
         {character.backgroundImage ? (
-          <span className="absolute inset-0 bg-black/20" />
+          <span className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
         ) : (
           <span className="absolute inset-0 grid place-items-center text-[10rem] opacity-15 text-white select-none">
             {character.emoji}
           </span>
         )}
-        <button
-          onClick={onBack}
+        <div
           className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-white/90 hover:text-white bg-black/15 hover:bg-black/25 backdrop-blur px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            onBack();
+          }}
         >
           <ArrowLeft size={16} /> 뒤로
-        </button>
-      </div>
+        </div>
+      </button>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
         {/* Avatar + subscribe overlap the banner; identity flows below it. */}
@@ -173,6 +182,14 @@ export function CharacterDetailView({
           </div>
         )}
       </div>
+
+      {viewingImage && (
+        <ImageViewer
+          imageUrl={viewingImage}
+          title={character.name}
+          onClose={() => setViewingImage(null)}
+        />
+      )}
     </div>
   );
 }
