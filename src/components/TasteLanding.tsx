@@ -95,7 +95,7 @@ const ORIENTATIONS = ['여성향', '남성향'];
 const CONTENT_TYPES = ['애니메이션·만화', '게임', '웹툰·웹소설', '보컬로이드', '버츄얼 방송'];
 const RELATIONSHIPS = ['BL', 'GL', 'HL', '로맨스 선호 X'];
 const CHARACTER_GENDERS = ['남자 캐릭터', '여자 캐릭터', '그 외'];
-const CHARACTER_AGES = ['10대 미만', '10대', '20대', '30대', '40대', '50대', '60대', '70대 이상'];
+const CHARACTER_AGES = ['10대 미만', '10대', '20대', '30대', '40대', '50대', '60대', '70대 이상', '150대 이상'];
 
 // Traits get the full "속성 카드" treatment — an attribute tile with its own
 // emoji and flavour line, since this is the step fans care about most.
@@ -160,8 +160,9 @@ const PICK_REPLIES: Record<string, string> = {
   '보컬로이드': '보컬로이드! 신곡 소식은 절대 놓치지 않을게요.',
   '버츄얼 방송': '버츄얼 방송까지… 챙길 게 많아지겠네요. 좋아요.',
   '웹툰·웹소설': '연재분 올라오면 제일 먼저 알려드릴게요.',
-  'BL': 'BL이시군요. 알겠습니다, 아주 확실하게 챙길게요.',
-  'GL': 'GL이시군요. 취향이 좋으시네요.',
+  'BL': 'BL은 「Boys’ Love」의 줄임말로 남자 캐릭터끼리의 로맨스를 뜻해요. 알겠습니다, 아주 확실하게 챙길게요.',
+  'GL': 'GL은 「Girls’ Love」의 줄임말로 여자 캐릭터끼리의 로맨스를 뜻해요. 취향이 좋으시네요.',
+  'HL': 'HL은 「Hetero Love」의 줄임말로 남녀 캐릭터 간의 로맨스를 뜻해요. 무난하게 챙겨둘게요.',
   '로맨스 선호 X': '관계성은 빼고 캐릭터만. 깔끔해서 좋아요.',
   '쿨·냉정': '무표정 속의 다정함… 그 갭이 좋은 거죠.',
   '다정·힐링': '보고만 있어도 치유되는 타입, 저도 동의해요.',
@@ -214,10 +215,14 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
     setReply(text ?? null);
     trackMascotExpression('happy', key ?? text, step);
     window.clearTimeout(replyTimer.current);
+    // Longer lines (e.g. explaining what BL/GL mean) need more than a flash
+    // to actually read — scale the on-screen time with the text length
+    // instead of clearing every reply after the same fixed beat.
+    const duration = text ? Math.min(6000, Math.max(2400, text.length * 65)) : 2400;
     replyTimer.current = window.setTimeout(() => {
       setMood('idle');
       setReply(null);
-    }, 2400);
+    }, duration);
   }, [step]);
 
   useEffect(() => () => window.clearTimeout(replyTimer.current), []);
@@ -276,6 +281,20 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
     if (turningOn) {
       react(PICK_REPLIES[value], value);
       trackPreference(key, value);
+    }
+  };
+
+  // "전체 선택" toggle for a multi-select group: fills every option, or clears
+  // the group if everything's already selected.
+  const toggleAllField = (
+    key: 'orientations' | 'contentTypes' | 'relationships' | 'characterGenders' | 'characterAges' | 'characterTraits',
+    allOptions: string[],
+  ) => {
+    const turningOn = profile[key].length < allOptions.length;
+    setField(key, turningOn ? allOptions : []);
+    if (turningOn) {
+      react('전부 골라주셨네요! 하나도 놓치지 않고 챙길게요.', `${key}_select_all`);
+      trackPreference(key, '__all__');
     }
   };
 
@@ -408,6 +427,7 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                     options={ORIENTATIONS}
                     selected={profile.orientations}
                     onToggle={(value) => toggleField('orientations', value)}
+                    onToggleAll={() => toggleAllField('orientations', ORIENTATIONS)}
                   />
                   <p className="flex items-center gap-1.5 text-xs text-slate-400">
                     <Zap size={13} className="text-violet-400" />
@@ -424,6 +444,7 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                     options={CONTENT_TYPES}
                     selected={profile.contentTypes}
                     onToggle={(value) => toggleField('contentTypes', value)}
+                    onToggleAll={() => toggleAllField('contentTypes', CONTENT_TYPES)}
                   />
                   <ChoiceGroup
                     label="선호하는 관계성"
@@ -431,6 +452,7 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                     options={RELATIONSHIPS}
                     selected={profile.relationships}
                     onToggle={(value) => toggleField('relationships', value)}
+                    onToggleAll={() => toggleAllField('relationships', RELATIONSHIPS)}
                   />
                 </div>
               )}
@@ -443,6 +465,7 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                     options={CHARACTER_GENDERS}
                     selected={profile.characterGenders}
                     onToggle={(value) => toggleField('characterGenders', value)}
+                    onToggleAll={() => toggleAllField('characterGenders', CHARACTER_GENDERS)}
                   />
                   <ChoiceGroup
                     label="선호 캐릭터 나이대"
@@ -450,9 +473,19 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                     options={CHARACTER_AGES}
                     selected={profile.characterAges}
                     onToggle={(value) => toggleField('characterAges', value)}
+                    onToggleAll={() => toggleAllField('characterAges', CHARACTER_AGES)}
                   />
                   <fieldset>
-                    <GroupLegend label="선호 캐릭터 분위기·속성" hint="중복 선택 가능" />
+                    <GroupLegend
+                      label="선호 캐릭터 분위기·속성"
+                      hint="중복 선택 가능"
+                      action={
+                        <SelectAllToggle
+                          allSelected={CHARACTER_TRAITS.every((t) => profile.characterTraits.includes(t.label))}
+                          onClick={() => toggleAllField('characterTraits', CHARACTER_TRAITS.map((t) => t.label))}
+                        />
+                      }
+                    />
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                       {CHARACTER_TRAITS.map(({ label, emoji, flavor }) => {
                         const active = profile.characterTraits.includes(label);
@@ -917,11 +950,35 @@ function FieldLabel({ text, icon }: { text: string; icon?: React.ReactNode }) {
   );
 }
 
-function GroupLegend({ label, hint }: { label: string; hint?: string }) {
+function GroupLegend({
+  label,
+  hint,
+  action,
+}: {
+  label: string;
+  hint?: string;
+  action?: React.ReactNode;
+}) {
   return (
-    <legend className="mb-3 text-sm font-bold text-slate-700">
-      {label} {hint && <span className="ml-1 text-xs font-medium text-violet-400">· {hint}</span>}
+    <legend className="mb-3 flex w-full items-center justify-between gap-3 text-sm font-bold text-slate-700">
+      <span>
+        {label} {hint && <span className="ml-1 text-xs font-medium text-violet-400">· {hint}</span>}
+      </span>
+      {action}
     </legend>
+  );
+}
+
+/** "전체 선택" / "전체 해제" toggle, shown next to a multi-select group's label. */
+function SelectAllToggle({ allSelected, onClick }: { allSelected: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="shrink-0 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[11px] font-black text-violet-600 transition hover:border-violet-300 hover:bg-violet-100"
+    >
+      {allSelected ? '전체 해제' : '전체 선택'}
+    </button>
   );
 }
 
@@ -931,16 +988,24 @@ function ChoiceGroup({
   options,
   selected,
   onToggle,
+  onToggleAll,
 }: {
   label: string;
   hint?: string;
   options: string[];
   selected: string[];
   onToggle: (value: string) => void;
+  /** Omit for single-select groups (e.g. 성별) — "select all" only makes sense for multi-select. */
+  onToggleAll?: () => void;
 }) {
+  const allSelected = options.length > 0 && options.every((option) => selected.includes(option));
   return (
     <fieldset>
-      <GroupLegend label={label} hint={hint} />
+      <GroupLegend
+        label={label}
+        hint={hint}
+        action={onToggleAll && <SelectAllToggle allSelected={allSelected} onClick={onToggleAll} />}
+      />
       <div className="flex flex-wrap gap-2.5">
         {options.map((option) => {
           const active = selected.includes(option);

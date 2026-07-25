@@ -18,7 +18,7 @@ import { StatsView } from './components/StatsView';
 
 type View =
   | { name: 'feed' }
-  | { name: 'discover' }
+  | { name: 'discover'; query?: string }
   | { name: 'goods'; characterId?: string }
   | { name: 'character'; id: string }
   | { name: 'stats' };
@@ -190,9 +190,9 @@ export default function App() {
     trackPageView('feed', { method });
     setView({ name: 'feed' });
   }, []);
-  const goDiscover = useCallback((method: PageViewMethod = 'nav') => {
+  const goDiscover = useCallback((method: PageViewMethod = 'nav', query?: string) => {
     trackPageView('discover', { method });
-    setView({ name: 'discover' });
+    setView({ name: 'discover', query });
   }, []);
   const openGoods = useCallback((characterId?: string, method: PageViewMethod = 'nav') => {
     trackPageView('goods', { method, id: characterId });
@@ -271,8 +271,14 @@ export default function App() {
             live={live}
             syncNote={syncNote}
             onSelectCharacter={(id) => openCharacter(id, 'chip')}
-            onDiscover={() => goDiscover('discover_cta')}
+            onDiscover={(query) => goDiscover('discover_cta', query)}
             onOpenGoods={openGoods}
+            allCharacters={CHARACTERS}
+            allPosts={annotatedPosts}
+            allGoods={annotatedGoods}
+            isSubscribed={isSubscribed}
+            postCounts={postCounts}
+            onToggleSubscribe={trackedToggle}
           />
         )}
 
@@ -283,6 +289,7 @@ export default function App() {
             onToggle={trackedToggle}
             onOpen={(id) => openCharacter(id, 'card')}
             preferenceIds={preferenceIds}
+            initialQuery={view.query}
           />
         )}
 
