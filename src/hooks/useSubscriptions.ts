@@ -6,9 +6,10 @@ const STORAGE_KEY = 'ojosama.subscriptions.v2';
 const LEGACY_STORAGE_KEY = 'oshinoti.subscriptions.v2';
 
 // Works a first-time visitor starts with, so the feed isn't empty.
-// (w001 원피스 · w031 체인소맨 · w071 주술회전 — the pre-filled examples;
-// 'misc' — the 기타 bucket, so unclassified live posts are visible too.)
-const DEFAULT_SUBSCRIPTIONS = ['w001', 'w031', 'w071', 'misc'];
+// (w001 원피스 · w031 체인소맨 · w071 주술회전 — the pre-filled examples.)
+// Deliberately excludes 'misc' (기타 bucket): auto-subscribing it would
+// flood "전체" with posts unrelated to anything the user actually follows.
+const DEFAULT_SUBSCRIPTIONS = ['w001', 'w031', 'w071'];
 
 function load(): string[] {
   try {
