@@ -58,30 +58,56 @@ export function GoodsCard({ listing, onSelectCharacter, variant = 'grid' }: Prop
     .filter((c): c is Character => Boolean(c) && c.id !== 'misc');
 
   if (variant === 'feed') {
+    // Same footprint as PostCard (header → body → full-width image → action
+    // bar) so goods listings read as a peer of the feed, not a smaller,
+    // visually distinct insert.
     return (
-      <article className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 transition-shadow flex gap-3 p-3">
-        <a href={listing.link} target="_blank" rel="noreferrer" className="shrink-0">
-          <ListingImage listing={listing} className="w-20 h-20 rounded-xl" />
-        </a>
-        <div className="min-w-0 flex-1 flex flex-col">
-          <div className="flex items-center gap-1.5 mb-1">
-            <PlatformBadge platform={listing.platform} />
-            <Tag size={11} className="text-slate-300" />
-            <span className="text-[11px] text-slate-400">매물 · {relativeTime(listing.timestamp)}</span>
+      <a
+        href={listing.link}
+        target="_blank"
+        rel="noreferrer"
+        className="group block bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 transition-shadow"
+      >
+        <div className="p-5">
+          <div className="flex items-center justify-between mb-3.5">
+            <div className="flex items-center gap-1.5">
+              <PlatformBadge platform={listing.platform} />
+              <Tag size={11} className="text-slate-300" />
+              <span className="text-xs text-slate-400 font-medium">중고 매물</span>
+            </div>
+            <span className="text-xs text-slate-400 font-medium">{relativeTime(listing.timestamp)}</span>
           </div>
-          <a href={listing.link} target="_blank" rel="noreferrer" className="min-w-0">
-            <p className="font-semibold text-slate-900 text-sm leading-snug line-clamp-2">{listing.title}</p>
-          </a>
-          <p className="mt-1 font-extrabold text-slate-900">{formatPrice(listing.price, listing.priceLabel)}</p>
+
           {matchedChars.length > 0 && (
-            <div className="mt-1.5 flex flex-wrap gap-1">
-              {matchedChars.slice(0, 3).map((c) => (
+            <div className="flex flex-wrap gap-1.5 mb-3" onClick={(e) => e.stopPropagation()}>
+              {matchedChars.map((c) => (
                 <CharacterChip key={c.id} character={c} size="sm" onClick={() => onSelectCharacter?.(c.id)} />
               ))}
             </div>
           )}
+
+          <p className="font-bold text-slate-900 text-[15px] leading-snug">{listing.title}</p>
+          <p className="mt-1.5 text-lg font-extrabold text-slate-900">
+            {formatPrice(listing.price, listing.priceLabel)}
+          </p>
+          {listing.location && (
+            <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
+              <MapPin size={11} />
+              {listing.location}
+            </p>
+          )}
         </div>
-      </article>
+
+        <div className="border-t border-slate-100 bg-slate-50">
+          <ListingImage listing={listing} className="w-full max-h-80" />
+        </div>
+
+        <div className="px-5 py-2.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-end">
+          <span className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 group-hover:text-slate-800 transition-colors">
+            매물 보기 <ExternalLink size={14} />
+          </span>
+        </div>
+      </a>
     );
   }
 

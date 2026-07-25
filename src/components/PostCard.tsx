@@ -69,7 +69,13 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
   const content = stripLinks(post.content);
 
   return (
-    <article className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 transition-shadow">
+    <a
+      href={post.link}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() => trackFeatureUse('view_original_post')}
+      className="group block bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg hover:shadow-slate-200/60 transition-shadow"
+    >
       <div className="p-5">
         {/* Author row */}
         <div className="flex items-center justify-between mb-3.5">
@@ -97,9 +103,9 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
           </div>
         </div>
 
-        {/* Matched character chips */}
+        {/* Matched character chips — own navigation, so they opt out of the card's link */}
         {matchedChars.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="flex flex-wrap gap-1.5 mb-3" onClick={(e) => e.stopPropagation()}>
             {matchedChars.map((c) => (
               <CharacterChip
                 key={c.id}
@@ -148,7 +154,11 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
             <span className="text-xs text-slate-400">번역을 사용할 수 없어요</span>
           ) : (
             <button
-              onClick={handleTranslate}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleTranslate();
+              }}
               disabled={translateState === 'loading' || !!translation}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-sky-600 hover:text-sky-700 disabled:text-slate-300 transition-colors"
             >
@@ -161,16 +171,11 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
             </button>
           )}
         </div>
-        <a
-          href={post.link}
-          target="_blank"
-          rel="noreferrer"
-          onClick={() => trackFeatureUse('view_original_post')}
-          className="shrink-0 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
-        >
+        {/* Whole card already links out (no separate click needed) — this is just a visual cue. */}
+        <span className="shrink-0 inline-flex items-center gap-1 text-sm font-medium text-slate-500 group-hover:text-slate-800 transition-colors">
           원본 보기 <ExternalLink size={14} />
-        </a>
+        </span>
       </div>
-    </article>
+    </a>
   );
 }

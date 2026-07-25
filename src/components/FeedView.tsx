@@ -37,6 +37,19 @@ type FeedEntry =
   | { kind: 'post'; key: string; timestamp: number; post: FeedPost }
   | { kind: 'goods'; key: string; timestamp: number; listing: GoodsListing };
 
+// Goods should read as a light seasoning in the feed, not the main course —
+// cap them to roughly 1-in-4 posts and, when there are more matches than
+// that budget allows, pick evenly across the (already recency-sorted) list
+// instead of just the newest ones, so the sample isn't all from one burst.
+const GOODS_PER_POSTS = 4;
+
+function sampleEvenly<T>(items: T[], count: number): T[] {
+  if (count <= 0) return [];
+  if (count >= items.length) return items;
+  const step = items.length / count;
+  return Array.from({ length: count }, (_, i) => items[Math.floor(i * step)]);
+}
+
 export function FeedView({
   subscribed,
   posts,
@@ -81,7 +94,10 @@ export function FeedView({
       post,
     }));
     if (selectedGoods.length === 0) return postEntries;
-    const goodsEntries: FeedEntry[] = selectedGoods.map((listing) => ({
+
+    const goodsBudget = Math.max(1, Math.ceil(postEntries.length / GOODS_PER_POSTS));
+    const cappedGoods = sampleEvenly(selectedGoods, goodsBudget);
+    const goodsEntries: FeedEntry[] = cappedGoods.map((listing) => ({
       kind: 'goods',
       key: `goods:${listing.id}`,
       timestamp: listing.timestamp,
