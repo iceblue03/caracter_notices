@@ -27,90 +27,110 @@ body {
 /* ---------------------------------------------------------------------------
  * Onboarding theme ("입덕 게이트").
  *
- * A dark, neon late-night-anime look. Everything here is scoped under
- * `.ok-shell` so the rest of the app keeps its light theme — including
- * `color-scheme`, which has to flip to dark for the native <select> popup and
- * the number input's spinner to stop rendering as bright white boxes.
+ * A white canvas with violet as the single accent. Scoped under `.ok-shell`
+ * so nothing here leaks into the rest of the app.
+ *
+ * Motion rule: the background never moves. Every animation below is either a
+ * response to something the user just did (flash, pop, rise, bubble) or a sign
+ * of life on the guide character — so nothing competes with reading the form.
  * ------------------------------------------------------------------------- */
 .ok-shell {
-  color-scheme: dark;
-  background-color: #070512;
+  background:
+    radial-gradient(700px 440px at 10% -8%, rgb(139 92 246 / 0.10), transparent 64%),
+    radial-gradient(560px 380px at 94% 2%, rgb(168 85 247 / 0.08), transparent 60%),
+    radial-gradient(760px 480px at 52% 108%, rgb(196 181 253 / 0.16), transparent 62%),
+    #fbfaff;
 }
 
-@keyframes ok-aurora {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(5%, -7%, 0) scale(1.18); }
+/* Faint dot texture, faded out below the fold so it never fights the content. */
+.ok-grid {
+  background-image: radial-gradient(rgb(124 58 237 / 0.11) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 78% 55% at 50% 0%, #000, transparent 72%);
+  mask-image: radial-gradient(ellipse 78% 55% at 50% 0%, #000, transparent 72%);
 }
-@keyframes ok-twinkle {
-  0%, 100% { opacity: 0.12; transform: scale(0.6); }
-  50% { opacity: 1; transform: scale(1); }
-}
-@keyframes ok-fall {
-  0% { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
-  10%, 85% { opacity: 0.7; }
-  100% { transform: translate3d(7vw, 112vh, 0) rotate(420deg); opacity: 0; }
-}
-@keyframes ok-sheen {
-  0% { transform: translateX(-130%) skewX(-18deg); }
-  55%, 100% { transform: translateX(260%) skewX(-18deg); }
-}
+
+/* — reactions ————————————————————————————————————————————————————— */
 @keyframes ok-rise {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
 @keyframes ok-pop {
-  0% { opacity: 0; transform: scale(0.55); }
-  65% { transform: scale(1.12); }
+  0% { opacity: 0; transform: scale(0.5); }
+  65% { transform: scale(1.14); }
   100% { opacity: 1; transform: scale(1); }
 }
-@keyframes ok-halo {
-  0%, 100% { box-shadow: 0 0 0 0 rgb(167 139 250 / 0.5); }
-  50% { box-shadow: 0 0 20px 5px rgb(167 139 250 / 0.35); }
+/* Ripple that fires once, the moment an option turns on. */
+@keyframes ok-flash {
+  from { opacity: 0.85; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.07); }
+}
+@keyframes ok-bubble {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to { opacity: 1; transform: none; }
 }
 
-.ok-aurora { animation: ok-aurora 18s ease-in-out infinite; }
-.ok-star { animation: ok-twinkle 4s ease-in-out infinite; }
-/* `backwards` matters: without it a delayed petal sits fully opaque at the top
-   of the screen until its turn comes round. */
-.ok-petal { animation: ok-fall linear infinite backwards; }
-.ok-rise { animation: ok-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.ok-pop { animation: ok-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-.ok-halo { animation: ok-halo 2.4s ease-in-out infinite; }
+/* — signs of life on the guide ———————————————————————————————————— */
+@keyframes ok-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.08); }
+}
+@keyframes ok-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes ok-orbit {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(3px, -7px) rotate(14deg); }
+}
+@keyframes ok-gauge-shine {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(240%); }
+}
 
-/* Diagonal light sweep across the CTA / oshi pass. */
-.ok-sheen::after {
+.ok-rise { animation: ok-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ok-pop { animation: ok-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.ok-flash { animation: ok-flash 460ms ease-out forwards; }
+.ok-bubble { animation: ok-bubble 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ok-breathe { animation: ok-breathe 4.2s ease-in-out infinite; }
+.ok-orbit { animation: ok-orbit 5.5s ease-in-out infinite; }
+
+/* SVG needs `fill-box` for `transform-origin: center` to mean the eye itself. */
+.ok-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ok-blink 6s ease-in-out infinite;
+}
+.ok-eye-r { animation-delay: 40ms; }
+
+.ok-gauge-shine::after {
   content: '';
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 42%;
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.28), transparent);
-  animation: ok-sheen 3.4s ease-in-out infinite;
-  pointer-events: none;
+  inset: 0;
+  width: 38%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  animation: ok-gauge-shine 2.8s ease-in-out infinite;
 }
 
 .ok-field {
   width: 100%;
-  border: 1px solid rgb(148 163 184 / 0.22);
+  border: 1px solid #e6e2f5;
   border-radius: 0.9rem;
-  background: rgb(15 10 34 / 0.72);
+  background: #fff;
   padding: 0.8rem 1rem;
-  color: #ede9fe;
+  color: #1e1b34;
   font-size: 0.9rem;
   font-weight: 600;
   outline: none;
-  transition: border-color 160ms, box-shadow 160ms, background-color 160ms;
+  transition: border-color 160ms, box-shadow 160ms;
 }
 .ok-field:focus {
-  border-color: rgb(167 139 250 / 0.9);
-  background: rgb(24 16 51 / 0.9);
-  box-shadow: 0 0 0 4px rgb(139 92 246 / 0.22);
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 4px rgb(139 92 246 / 0.14);
 }
 .ok-field::placeholder {
-  color: rgb(196 181 253 / 0.45);
-}
-.ok-field option {
-  background: #14102b;
-  color: #ede9fe;
+  color: #a5a0bd;
+  font-weight: 500;
 }
 .ok-field-search {
   padding-left: 3rem;
@@ -121,28 +141,33 @@ body {
 
 .ok-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgb(167 139 250 / 0.6) transparent;
+  scrollbar-color: #c4b5fd transparent;
 }
 .ok-scroll::-webkit-scrollbar {
   width: 8px;
 }
 .ok-scroll::-webkit-scrollbar-track {
-  background: rgb(148 163 184 / 0.08);
+  background: #f4f1fd;
   border-radius: 999px;
 }
 .ok-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #a78bfa, #ec4899);
+  background: #c4b5fd;
   border-radius: 999px;
+}
+.ok-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ok-aurora,
-  .ok-star,
-  .ok-petal,
   .ok-rise,
   .ok-pop,
-  .ok-halo,
-  .ok-sheen::after {
+  .ok-flash,
+  .ok-bubble,
+  .ok-breathe,
+  .ok-orbit,
+  .ok-eye,
+  .ok-gauge-shine::after {
     animation: none;
   }
+  .ok-flash { opacity: 0; }
 }
