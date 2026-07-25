@@ -34,7 +34,7 @@ export function Sidebar({
       {/* Brand */}
       <button onClick={onFeed} className="flex items-center gap-2.5 px-5 h-16 shrink-0">
         <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-sm p-1.5">
-          <img src="/logo.svg" alt="" className="w-full h-full" />
+          <img src="/logo.png" alt="" className="w-full h-full object-contain" />
         </span>
         <span className="text-left leading-none">
           <span className="block text-lg font-extrabold tracking-tight text-slate-900">오조사마</span>
