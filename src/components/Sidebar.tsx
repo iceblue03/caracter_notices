@@ -1,4 +1,4 @@
-import { Home, Compass, Plus, Sparkles, ShoppingBag, BarChart3 } from 'lucide-react';
+import { Home, Compass, Plus, ShoppingBag, BarChart3 } from 'lucide-react';
 import { Character } from '../types';
 import { catalogSubtitle } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
@@ -33,8 +33,8 @@ export function Sidebar({
     <aside className="hidden md:flex flex-col w-64 shrink-0 h-screen sticky top-0 border-r border-slate-200 bg-white/80 backdrop-blur">
       {/* Brand */}
       <button onClick={onFeed} className="flex items-center gap-2.5 px-5 h-16 shrink-0">
-        <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-sm">
-          <Sparkles size={18} />
+        <span className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-sm p-1.5">
+          <img src="/logo.svg" alt="" className="w-full h-full" />
         </span>
         <span className="text-left leading-none">
           <span className="block text-lg font-extrabold tracking-tight text-slate-900">오조사마</span>

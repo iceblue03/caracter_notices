@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Home, Compass, Sparkles, ShoppingBag, BarChart3 } from 'lucide-react';
+import { Home, Compass, ShoppingBag, BarChart3 } from 'lucide-react';
 import { CHARACTERS, getCharacter } from './characters';
 import { SAMPLE_POSTS, SAMPLE_GOODS } from './data';
 import { resolveFeaturedEvents } from './events';
@@ -254,8 +254,8 @@ export default function App() {
       {/* Mobile top bar */}
       <header className="md:hidden fixed top-0 inset-x-0 z-20 h-14 bg-white/90 backdrop-blur border-b border-slate-200 flex items-center px-4">
         <button onClick={() => goFeed('sidebar')} className="flex items-center gap-2">
-          <span className="grid place-items-center w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white">
-            <Sparkles size={16} />
+          <span className="grid place-items-center w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white p-1.5">
+            <img src="/logo.svg" alt="" className="w-full h-full" />
           </span>
           <span className="font-extrabold tracking-tight">오조사마</span>
         </button>

@@ -334,8 +334,8 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
         {/* Header: identity, live 덕력 gauge, stage counter on one row. */}
         <header className="mb-4 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-700 text-white shadow-[0_10px_24px_-10px_rgba(124,58,237,0.9)]">
-              <Sparkles size={20} />
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-700 text-white shadow-[0_10px_24px_-10px_rgba(124,58,237,0.9)] p-2">
+              <img src="/logo.svg" alt="" className="w-full h-full" />
             </span>
             <span className="leading-tight">
               <span className="block text-lg font-black tracking-tight text-slate-900">오조사마</span>

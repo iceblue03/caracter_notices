@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Character } from '../types';
 import { gradientStyle } from '../lib/utils';
 
@@ -12,8 +13,11 @@ interface Props {
 /** Character avatar: displays profile image if available, otherwise emoji on gradient. */
 export function CharacterAvatar({ character, size = 44, onClick, ring, className }: Props) {
   const Tag = onClick ? 'button' : 'div';
+  // Local files can go missing/rename; falling back to the emoji/gradient
+  // beats leaving the browser's broken-image glyph on screen.
+  const [imgFailed, setImgFailed] = useState(false);
 
-  if (character.avatarImage) {
+  if (character.avatarImage && !imgFailed) {
     return (
       <Tag
         onClick={onClick}
@@ -29,6 +33,7 @@ export function CharacterAvatar({ character, size = 44, onClick, ring, className
         <img
           src={character.avatarImage}
           alt={character.name}
+          onError={() => setImgFailed(true)}
           className="w-full h-full object-cover"
         />
       </Tag>

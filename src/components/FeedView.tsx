@@ -7,7 +7,6 @@ import { MISC_ID, getChildCharacters } from '../characters';
 import { EventBanner } from './EventBanner';
 import { PostCard } from './PostCard';
 import { GoodsCard } from './GoodsCard';
-import { CharacterAvatar } from './CharacterAvatar';
 import { CharacterCard } from './CharacterCard';
 import { FilterPill } from './FilterPill';
 
@@ -55,47 +54,16 @@ export function FeedView({
   postCounts,
   onToggleSubscribe,
 }: Props) {
-  const [genre, setGenre] = useState<string>('all');
   const [filter, setFilter] = useState<string>('all');
   const [searchInput, setSearchInput] = useState('');
 
-  // Genres present among the user's subscriptions, in the order they first
-  // appear (subscribed is popularity-ordered already).
-  const genres = useMemo(() => {
-    const seen = new Set<string>();
-    const list: string[] = [];
-    for (const c of subscribed) {
-      if (!seen.has(c.series)) {
-        seen.add(c.series);
-        list.push(c.series);
-      }
-    }
-    return list;
-  }, [subscribed]);
-
-  const seriesById = useMemo(
-    () => new Map(subscribed.map((c) => [c.id, c.series])),
-    [subscribed],
-  );
-
-  // Characters shown in the rail: narrowed to the selected genre, if any.
-  const railCharacters = useMemo(
-    () => (genre === 'all' ? subscribed : subscribed.filter((c) => c.series === genre)),
-    [subscribed, genre],
-  );
+  // Filter rail always shows every subscription, one row, by title.
+  const railCharacters = subscribed;
 
   const visiblePosts = useMemo(() => {
-    let result = posts;
-    if (genre !== 'all') {
-      result = result.filter((p) =>
-        p.matches?.some((m) => seriesById.get(m.characterId) === genre),
-      );
-    }
-    if (filter !== 'all') {
-      result = result.filter((p) => p.matches?.some((m) => m.characterId === filter));
-    }
-    return result;
-  }, [posts, genre, filter, seriesById]);
+    if (filter === 'all') return posts;
+    return posts.filter((p) => p.matches?.some((m) => m.characterId === filter));
+  }, [posts, filter]);
 
   // Goods listings for the currently-selected character only — kept out of
   // "전체" so the unfiltered feed isn't cluttered with every character's
@@ -123,10 +91,6 @@ export function FeedView({
   }, [visiblePosts, selectedGoods]);
 
   const subscribedIds = useMemo(() => subscribed.map((c) => c.id), [subscribed]);
-
-  useEffect(() => {
-    if (genre !== 'all' && !genres.includes(genre)) setGenre('all');
-  }, [genre, genres]);
 
   useEffect(() => {
     if (filter !== 'all' && !railCharacters.some((c) => c.id === filter)) setFilter('all');
@@ -226,34 +190,10 @@ export function FeedView({
         <EmptyFeed onDiscover={() => onDiscover()} />
       ) : (
         <>
-          {/* Genre filter rail */}
-          {genres.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-1 scrollbar-none">
-              <FilterPill active={genre === 'all'} onClick={() => setGenre('all')} compact>
-                전체 장르
-              </FilterPill>
-              {genres.map((g) => (
-                <FilterPill
-                  key={g}
-                  active={genre === g}
-                  onClick={() => {
-                    if (genre !== g) trackFeatureUse('filter_genre', { genre: g });
-                    setGenre((current) => (current === g ? 'all' : g));
-                  }}
-                  compact
-                >
-                  {g}
-                </FilterPill>
-              ))}
-            </div>
-          )}
-
-          {/* Character filter rail */}
+          {/* Filter rail — one row, plain title text (no avatar art, so a
+              missing/broken image file never distorts the row). */}
           <div className="flex gap-2 overflow-x-auto pb-3 -mx-1 px-1 mb-2 scrollbar-none">
-            <FilterPill active={filter === 'all'} onClick={() => setFilter('all')}>
-              <span className="grid place-items-center w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white text-xs">
-                ✦
-              </span>
+            <FilterPill active={filter === 'all'} onClick={() => setFilter('all')} compact>
               전체
             </FilterPill>
             {railCharacters.map((c) => (
@@ -264,8 +204,8 @@ export function FeedView({
                   if (filter !== c.id) trackFeatureUse('filter_character', { id: c.id, name: c.name });
                   setFilter((current) => (current === c.id ? 'all' : c.id));
                 }}
+                compact
               >
-                <CharacterAvatar character={c} size={24} />
                 {c.name}
               </FilterPill>
             ))}

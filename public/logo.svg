@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+  <!-- Photo flag: pole + framed photo with folded corner -->
+  <path d="M17 32h5v37h-5z"/>
+  <path d="M17 32h5v6h-5z"/>
+  <path d="M20 34h4v5h-4z"/>
+  <path d="M22 17h27a4 4 0 0 1 4 4v27a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V21a4 4 0 0 1 4-4z" fill="none" stroke="currentColor" stroke-width="6"/>
+  <path d="M23 24l10 10H23z"/>
+  <!-- Mustache + bow tie -->
+  <path d="M35 55c4-5 9-5 12-1 3-4 8-4 12 1 4 5 10 6 16 3-3 6-9 9-16 7-4-1-8-4-12-8-4 4-8 7-12 8-7 2-13-1-16-7 6 3 12 2 16-3z"/>
+  <path d="M42 63l14 0 3 3v6l-3 3H42l-3-3v-6z"/>
+  <path d="M45 66h8v6h-8z" fill="#fff"/>
+</svg>
