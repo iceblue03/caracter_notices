@@ -1,8 +1,9 @@
-import { Home, Compass, Plus, Sparkles } from 'lucide-react';
+import { Home, Compass, Plus, Sparkles, BarChart3 } from 'lucide-react';
 import { Character } from '../types';
+import { catalogSubtitle } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
 
-type Active = 'feed' | 'discover' | 'character';
+type Active = 'feed' | 'discover' | 'character' | 'stats';
 
 interface Props {
   active: Active;
@@ -11,6 +12,9 @@ interface Props {
   onFeed: () => void;
   onDiscover: () => void;
   onSelectCharacter: (id: string) => void;
+  /** Internal stats dashboard — only rendered when this device opted in (see App's admin flag). */
+  showStats?: boolean;
+  onStats?: () => void;
 }
 
 export function Sidebar({
@@ -20,6 +24,8 @@ export function Sidebar({
   onFeed,
   onDiscover,
   onSelectCharacter,
+  showStats,
+  onStats,
 }: Props) {
   return (
     <aside className="hidden md:flex flex-col w-64 shrink-0 h-screen sticky top-0 border-r border-slate-200 bg-white/80 backdrop-blur">
@@ -43,6 +49,9 @@ export function Sidebar({
           active={active === 'discover'}
           onClick={onDiscover}
         />
+        {showStats && onStats && (
+          <NavItem icon={<BarChart3 size={19} />} label="통계" active={active === 'stats'} onClick={onStats} />
+        )}
       </nav>
 
       {/* My characters */}
@@ -83,7 +92,7 @@ export function Sidebar({
                       <span className="block text-sm font-semibold text-slate-800 truncate">
                         {c.name}
                       </span>
-                      <span className="block text-[11px] text-slate-400 truncate">{c.series}</span>
+                      <span className="block text-[11px] text-slate-400 truncate">{catalogSubtitle(c)}</span>
                     </span>
                   </button>
                 </li>

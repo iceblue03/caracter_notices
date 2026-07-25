@@ -121,7 +121,20 @@
       "나루토",
       "naruto"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "나루토",
+        "aliases": []
+      },
+      {
+        "name": "사스케",
+        "aliases": []
+      },
+      {
+        "name": "사쿠라",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w010",
@@ -163,7 +176,20 @@
       "리제로",
       "re:zero"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "나츠키 스바루",
+        "aliases": []
+      },
+      {
+        "name": "에밀리아",
+        "aliases": []
+      },
+      {
+        "name": "렘",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w014",
@@ -173,7 +199,24 @@
       "무직전생",
       "mushoku tensei"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "루데우스 그레이랫",
+        "aliases": []
+      },
+      {
+        "name": "에리스 보레아스 그레이랫",
+        "aliases": []
+      },
+      {
+        "name": "록시 미굴디아",
+        "aliases": []
+      },
+      {
+        "name": "실피에트",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w015",
@@ -189,7 +232,20 @@
     "aliases": [
       "못 미더운 악녀입니다만"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "황영림",
+        "aliases": []
+      },
+      {
+        "name": "주혜월",
+        "aliases": []
+      },
+      {
+        "name": "리리",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w017",
@@ -198,7 +254,20 @@
     "aliases": [
       "정반대의 너와 나"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "스즈키 미유",
+        "aliases": []
+      },
+      {
+        "name": "타니 유스케",
+        "aliases": []
+      },
+      {
+        "name": "와타나베 마나미",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w018",
@@ -209,7 +278,20 @@
       "tensura",
       "슬라임"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "리무루 템페스트",
+        "aliases": []
+      },
+      {
+        "name": "시온",
+        "aliases": []
+      },
+      {
+        "name": "하쿠로우",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w019",
@@ -220,7 +302,20 @@
       "fullmetal alchemist",
       "fma"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "에드워드 엘릭",
+        "aliases": []
+      },
+      {
+        "name": "알폰스 엘릭",
+        "aliases": []
+      },
+      {
+        "name": "윈리 록벨",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w020",
@@ -230,7 +325,20 @@
       "불꽃소방대",
       "fire force"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "신라 쿠사카베",
+        "aliases": []
+      },
+      {
+        "name": "아서 보일",
+        "aliases": []
+      },
+      {
+        "name": "아키타루 오비",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w021",
@@ -240,7 +348,20 @@
       "소울이터",
       "soul eater"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "마카 알반",
+        "aliases": []
+      },
+      {
+        "name": "소울 이터",
+        "aliases": []
+      },
+      {
+        "name": "데스 더 키드",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w022",
@@ -251,7 +372,20 @@
       "black butler",
       "쿠로시츠지"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "세바스찬 미카엘리스",
+        "aliases": []
+      },
+      {
+        "name": "시엘 팬텀하이브",
+        "aliases": []
+      },
+      {
+        "name": "그렐 서트클리프",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w023",
@@ -261,7 +395,28 @@
       "봇치더락",
       "bocchi the rock"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "고토 히토리",
+        "aliases": []
+      },
+      {
+        "name": "이지치 니지카",
+        "aliases": []
+      },
+      {
+        "name": "야마다 료",
+        "aliases": []
+      },
+      {
+        "name": "키타 이쿠요",
+        "aliases": []
+      },
+      {
+        "name": "히로이 키쿠리",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w024",
@@ -271,7 +426,20 @@
       "하루히",
       "haruhi suzumiya"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "스즈미야 하루히",
+        "aliases": []
+      },
+      {
+        "name": "나가토 유키",
+        "aliases": []
+      },
+      {
+        "name": "아사히나 미쿠루",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w025",
@@ -281,7 +449,20 @@
       "케이온",
       "k-on"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "히라사와 유이",
+        "aliases": []
+      },
+      {
+        "name": "아키야마 미오",
+        "aliases": []
+      },
+      {
+        "name": "타이나카 리츠",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w026",
@@ -292,7 +473,24 @@
       "초전자포",
       "a certain scientific railgun"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "미사카 미코토",
+        "aliases": []
+      },
+      {
+        "name": "시라이 쿠로코",
+        "aliases": []
+      },
+      {
+        "name": "우이하르 카자리",
+        "aliases": []
+      },
+      {
+        "name": "사텐 루이코",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w027",
@@ -302,7 +500,24 @@
       "최애의 아이",
       "oshi no ko"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "호시노 아이",
+        "aliases": []
+      },
+      {
+        "name": "호시노 아쿠아마린",
+        "aliases": []
+      },
+      {
+        "name": "호시노 루비",
+        "aliases": []
+      },
+      {
+        "name": "아리마 카나",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w028",
@@ -312,7 +527,20 @@
       "이루마군",
       "welcome to demon school iruma-kun"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "스즈키 이루마",
+        "aliases": []
+      },
+      {
+        "name": "아스모데우스 아리스",
+        "aliases": []
+      },
+      {
+        "name": "발락 클라라",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w029",
@@ -322,7 +550,24 @@
       "하이큐",
       "haikyu"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "히나타 쇼요",
+        "aliases": []
+      },
+      {
+        "name": "카게야마 토비오",
+        "aliases": []
+      },
+      {
+        "name": "오이카와 토오루",
+        "aliases": []
+      },
+      {
+        "name": "쿠로오 테츠로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w030",
@@ -332,7 +577,24 @@
       "블루록",
       "blue lock"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "이사기 요이치",
+        "aliases": []
+      },
+      {
+        "name": "바치라 메구루",
+        "aliases": []
+      },
+      {
+        "name": "이토시 린",
+        "aliases": []
+      },
+      {
+        "name": "나기 세이시로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w031",
@@ -347,27 +609,19 @@
     "characters": [
       {
         "name": "덴지",
-        "aliases": [
-          "덴지",
-          "denji",
-          "デンジ"
-        ]
-      },
-      {
-        "name": "마키마",
-        "aliases": [
-          "마키마",
-          "makima",
-          "マキマ"
-        ]
+        "aliases": []
       },
       {
         "name": "파워",
-        "aliases": [
-          "파워",
-          "power",
-          "パワー"
-        ]
+        "aliases": []
+      },
+      {
+        "name": "하야카와 아키",
+        "aliases": []
+      },
+      {
+        "name": "마키마",
+        "aliases": []
       }
     ]
   },
@@ -379,7 +633,24 @@
       "진격거",
       "attack on titan"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "에렌 예거",
+        "aliases": []
+      },
+      {
+        "name": "미카사 아커만",
+        "aliases": []
+      },
+      {
+        "name": "아르민 알레르토",
+        "aliases": []
+      },
+      {
+        "name": "리바이 아커만",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w033",
@@ -389,7 +660,24 @@
       "프리렌",
       "frieren"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "프리렌",
+        "aliases": []
+      },
+      {
+        "name": "페른",
+        "aliases": []
+      },
+      {
+        "name": "슈타르크",
+        "aliases": []
+      },
+      {
+        "name": "힘멜",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w034",
@@ -400,7 +688,32 @@
       "jojo's bizarre adventure",
       "jojo"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "죠나단 죠스타",
+        "aliases": []
+      },
+      {
+        "name": "죠셉 죠스타",
+        "aliases": []
+      },
+      {
+        "name": "쿠죠 죠타로",
+        "aliases": []
+      },
+      {
+        "name": "DIO",
+        "aliases": []
+      },
+      {
+        "name": "죠르노 죠바나",
+        "aliases": []
+      },
+      {
+        "name": "디아볼로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w035",
@@ -431,7 +744,24 @@
       "원펀맨",
       "one punch man"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "사이타마",
+        "aliases": []
+      },
+      {
+        "name": "제노스",
+        "aliases": []
+      },
+      {
+        "name": "타츠마키",
+        "aliases": []
+      },
+      {
+        "name": "탱글탱글 프리즈너",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w038",
@@ -441,7 +771,20 @@
       "은혼",
       "gintama"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "사카타 긴토키",
+        "aliases": []
+      },
+      {
+        "name": "시무라 신파치",
+        "aliases": []
+      },
+      {
+        "name": "카구라",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w039",
@@ -451,7 +794,20 @@
       "짱구",
       "crayon shin-chan"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "신짱구",
+        "aliases": []
+      },
+      {
+        "name": "신형만",
+        "aliases": []
+      },
+      {
+        "name": "훈발놈",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w040",
@@ -471,7 +827,20 @@
       "암살교실",
       "assassination classroom"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "살생님",
+        "aliases": []
+      },
+      {
+        "name": "시오타 나기사",
+        "aliases": []
+      },
+      {
+        "name": "아카바네 카르마",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w042",
@@ -481,7 +850,20 @@
       "도망잘치는",
       "nige jouzu no wakagimi"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "호조 토키유키",
+        "aliases": []
+      },
+      {
+        "name": "스와 요리시게",
+        "aliases": []
+      },
+      {
+        "name": "시즈쿠",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w043",
@@ -492,7 +874,20 @@
       "실력지상주의",
       "classroom of the elite"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "아야노코지 키요타카",
+        "aliases": []
+      },
+      {
+        "name": "호리키타 스즈네",
+        "aliases": []
+      },
+      {
+        "name": "카루이자와 케이",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w044",
@@ -502,7 +897,20 @@
       "방패용사",
       "rising of the shield hero"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "이와타니 나오후미",
+        "aliases": []
+      },
+      {
+        "name": "라프타리아",
+        "aliases": []
+      },
+      {
+        "name": "필로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w045",
@@ -511,7 +919,24 @@
     "aliases": [
       "슬라임 300년"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "아즈사 아인워스",
+        "aliases": []
+      },
+      {
+        "name": "라이카",
+        "aliases": []
+      },
+      {
+        "name": "파르파",
+        "aliases": []
+      },
+      {
+        "name": "샤르샤",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w046",
@@ -521,7 +946,18 @@
       "마왕성에서 잘자요",
       "sleepy princess in the demon castle"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "오로라 수야 리 카이민",
+        "aliases": [
+          "수야 공주"
+        ]
+      },
+      {
+        "name": "마왕 타소 가레",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w047",
@@ -530,7 +966,20 @@
     "aliases": [
       "초카구야"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "카구야",
+        "aliases": []
+      },
+      {
+        "name": "호테이",
+        "aliases": []
+      },
+      {
+        "name": "테시가와라",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w048",
@@ -540,7 +989,24 @@
       "도쿄구울",
       "tokyo ghoul"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "카네키 켄",
+        "aliases": []
+      },
+      {
+        "name": "키리시마 토우카",
+        "aliases": []
+      },
+      {
+        "name": "아몬 코타로",
+        "aliases": []
+      },
+      {
+        "name": "츠키야마 슈",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w049",
@@ -550,7 +1016,24 @@
       "도리벤",
       "tokyo revengers"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "하나가키 타케미치",
+        "aliases": []
+      },
+      {
+        "name": "사노 만지로",
+        "aliases": [
+          "마이키"
+        ]
+      },
+      {
+        "name": "류구지 켄",
+        "aliases": [
+          "드라켄"
+        ]
+      }
+    ]
   },
   {
     "id": "w050",
@@ -567,7 +1050,20 @@
       "공각기동대",
       "ghost in the shell"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "쿠사나기 모토코",
+        "aliases": []
+      },
+      {
+        "name": "바토",
+        "aliases": []
+      },
+      {
+        "name": "토구사",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w052",
@@ -577,7 +1073,28 @@
       "아키라",
       "akira"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "카네다 쇼타로",
+        "aliases": []
+      },
+      {
+        "name": "시마 테츠오",
+        "aliases": []
+      },
+      {
+        "name": "야마가타",
+        "aliases": []
+      },
+      {
+        "name": "카이",
+        "aliases": []
+      },
+      {
+        "name": "아키라",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w053",
@@ -598,7 +1115,20 @@
       "evangelion",
       "eva"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "이카리 신지",
+        "aliases": []
+      },
+      {
+        "name": "아야나미 레이",
+        "aliases": []
+      },
+      {
+        "name": "소류 아스카 랑그레이",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w055",
@@ -608,7 +1138,24 @@
       "아노하나",
       "anohana"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "야도미 진타",
+        "aliases": [
+          "진탄"
+        ]
+      },
+      {
+        "name": "혼마 메이코",
+        "aliases": [
+          "멘마"
+        ]
+      },
+      {
+        "name": "안조 나루코",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w056",
@@ -618,7 +1165,20 @@
       "기생수",
       "parasyte"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "이즈미 신이치",
+        "aliases": []
+      },
+      {
+        "name": "오른쪽이",
+        "aliases": []
+      },
+      {
+        "name": "미기",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w057",
@@ -628,7 +1188,22 @@
       "요괴워치",
       "yo-kai watch"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "윤민호",
+        "aliases": [
+          "아마노 케이타"
+        ]
+      },
+      {
+        "name": "지바냥",
+        "aliases": []
+      },
+      {
+        "name": "위스퍼",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w058",
@@ -648,7 +1223,32 @@
       "데놋",
       "death note"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "야가미 라이토",
+        "aliases": []
+      },
+      {
+        "name": "L",
+        "aliases": []
+      },
+      {
+        "name": "니아",
+        "aliases": []
+      },
+      {
+        "name": "시부이마루 타쿠오",
+        "aliases": []
+      },
+      {
+        "name": "마츠다 토타",
+        "aliases": []
+      },
+      {
+        "name": "류크",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w060",
@@ -658,7 +1258,20 @@
       "코드기아스",
       "code geass"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "루루슈 람페르지",
+        "aliases": []
+      },
+      {
+        "name": "쿠루루기 스자쿠",
+        "aliases": []
+      },
+      {
+        "name": "C.C.",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w061",
@@ -669,7 +1282,24 @@
       "hunter x hunter",
       "hxh"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "곤 프리크스",
+        "aliases": []
+      },
+      {
+        "name": "키르아 조르딕",
+        "aliases": []
+      },
+      {
+        "name": "크라피카",
+        "aliases": []
+      },
+      {
+        "name": "히소카 모로우",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w062",
@@ -679,7 +1309,24 @@
       "닥터스톤",
       "dr. stone"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "이시가미 센쿠",
+        "aliases": []
+      },
+      {
+        "name": "오오키 타이주",
+        "aliases": []
+      },
+      {
+        "name": "오사와키 유즈리하",
+        "aliases": []
+      },
+      {
+        "name": "크롬",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w063",
@@ -690,7 +1337,32 @@
       "sword art online",
       "sao"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "키리토",
+        "aliases": [
+          "키리갸야 카즈토"
+        ]
+      },
+      {
+        "name": "아스나",
+        "aliases": [
+          "유우키 아스나"
+        ]
+      },
+      {
+        "name": "리파",
+        "aliases": [
+          "키리갸야 스구하"
+        ]
+      },
+      {
+        "name": "시논",
+        "aliases": [
+          "아사다 시노"
+        ]
+      }
+    ]
   },
   {
     "id": "w064",
@@ -700,7 +1372,20 @@
       "사카모토",
       "sakamoto days"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "사카모토 타로",
+        "aliases": []
+      },
+      {
+        "name": "아사쿠라 신",
+        "aliases": []
+      },
+      {
+        "name": "루 샤오탕",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w065",
@@ -710,7 +1395,24 @@
       "마슐",
       "mashle"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "마슈 번데드",
+        "aliases": []
+      },
+      {
+        "name": "핀 에이미",
+        "aliases": []
+      },
+      {
+        "name": "랜스 크라운",
+        "aliases": []
+      },
+      {
+        "name": "도트 바렛",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w066",
@@ -721,7 +1423,24 @@
       "우마루짱",
       "himouto umaru-chan"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "도마 우마루",
+        "aliases": []
+      },
+      {
+        "name": "도마 타이헤이",
+        "aliases": []
+      },
+      {
+        "name": "에비나 나나",
+        "aliases": []
+      },
+      {
+        "name": "모토바 키리에",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w067",
@@ -732,7 +1451,24 @@
       "rent-a-girlfriend",
       "카노조 오카리시마스"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "키노시타 카즈야",
+        "aliases": []
+      },
+      {
+        "name": "미즈하라 치즈루",
+        "aliases": []
+      },
+      {
+        "name": "나나미 마미",
+        "aliases": []
+      },
+      {
+        "name": "사쿠라사와 스미",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w068",
@@ -743,7 +1479,20 @@
       "food wars",
       "shokugeki no soma"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "유키히라 소마",
+        "aliases": []
+      },
+      {
+        "name": "나키리 에리나",
+        "aliases": []
+      },
+      {
+        "name": "타도코로 메구미",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w069",
@@ -752,7 +1501,26 @@
     "aliases": [
       "요리왕 비룡"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "유비룡",
+        "aliases": [
+          "류 마오신"
+        ]
+      },
+      {
+        "name": "매유",
+        "aliases": [
+          "메이리"
+        ]
+      },
+      {
+        "name": "천봉",
+        "aliases": [
+          "쉘"
+        ]
+      }
+    ]
   },
   {
     "id": "w070",
@@ -762,7 +1530,20 @@
       "바이올렛 에버가든",
       "violet evergarden"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "바이올렛 에버가든",
+        "aliases": []
+      },
+      {
+        "name": "길베르트 부겐빌리아",
+        "aliases": []
+      },
+      {
+        "name": "클라우디아 하진스",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w071",
@@ -776,32 +1557,20 @@
     ],
     "characters": [
       {
-        "name": "고죠 사토루",
-        "aliases": [
-          "고죠",
-          "사토루",
-          "gojo",
-          "satoru",
-          "五条悟"
-        ]
-      },
-      {
-        "name": "이타도리 유지",
-        "aliases": [
-          "이타도리",
-          "유지",
-          "itadori",
-          "yuji"
-        ]
+        "name": "이타도리 유우지",
+        "aliases": []
       },
       {
         "name": "후시구로 메구미",
-        "aliases": [
-          "후시구로",
-          "메구미",
-          "fushiguro",
-          "megumi"
-        ]
+        "aliases": []
+      },
+      {
+        "name": "쿠기사키 노라바라",
+        "aliases": []
+      },
+      {
+        "name": "고죠 사토루",
+        "aliases": []
       }
     ]
   },
@@ -813,7 +1582,20 @@
       "네버랜드",
       "the promised neverland"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "엠마",
+        "aliases": []
+      },
+      {
+        "name": "노먼",
+        "aliases": []
+      },
+      {
+        "name": "레이",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w073",
@@ -823,7 +1605,20 @@
       "4너거",
       "your lie in april"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "아리마 코세이",
+        "aliases": []
+      },
+      {
+        "name": "미야조노 카오리",
+        "aliases": []
+      },
+      {
+        "name": "사와베 츠바키",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w074",
@@ -833,7 +1628,32 @@
       "5등분",
       "the quintessential quintuplets"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "우에스기 후타로",
+        "aliases": []
+      },
+      {
+        "name": "나카노 이치카",
+        "aliases": []
+      },
+      {
+        "name": "나카노 니노",
+        "aliases": []
+      },
+      {
+        "name": "나카노 미쿠",
+        "aliases": []
+      },
+      {
+        "name": "나카노 요츠바",
+        "aliases": []
+      },
+      {
+        "name": "나카노 이츠키",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w075",
@@ -843,7 +1663,20 @@
       "지옥락",
       "hell's paradise"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "가비마루",
+        "aliases": []
+      },
+      {
+        "name": "야마다 아사에몬 사기리",
+        "aliases": []
+      },
+      {
+        "name": "아자 초베",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w076",
@@ -853,7 +1686,20 @@
       "블랙클로버",
       "black clover"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "아스타",
+        "aliases": []
+      },
+      {
+        "name": "유노",
+        "aliases": []
+      },
+      {
+        "name": "야미 스케히로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w077",
@@ -863,7 +1709,28 @@
       "종말의 발키리",
       "record of ragnarok"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "브륀힐드",
+        "aliases": []
+      },
+      {
+        "name": "겔",
+        "aliases": []
+      },
+      {
+        "name": "뤼포",
+        "aliases": []
+      },
+      {
+        "name": "아담",
+        "aliases": []
+      },
+      {
+        "name": "니콜라 테슬라",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w078",
@@ -873,7 +1740,20 @@
       "마법사의 신부",
       "the ancient magus' bride"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "하토리 치세",
+        "aliases": []
+      },
+      {
+        "name": "엘리아스 에인스워스",
+        "aliases": []
+      },
+      {
+        "name": "루스",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w079",
@@ -884,7 +1764,20 @@
       "blue exorcist",
       "ao no exorcist"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "오쿠무라 린",
+        "aliases": []
+      },
+      {
+        "name": "오쿠무라 유키오",
+        "aliases": []
+      },
+      {
+        "name": "모리야마 시에미",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w080",
@@ -894,7 +1787,20 @@
       "혈계전선",
       "blood blockade battlefront"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "레오나르도 워치",
+        "aliases": []
+      },
+      {
+        "name": "크라우스 V. 라인하르츠",
+        "aliases": []
+      },
+      {
+        "name": "재프 렌프로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w081",
@@ -904,7 +1810,22 @@
       "유녀전기",
       "saga of tanya the evil"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "타냐 데그레챠프",
+        "aliases": []
+      },
+      {
+        "name": "빅토리야 이바노브나 세레브랴코프",
+        "aliases": [
+          "비샤"
+        ]
+      },
+      {
+        "name": "에리히 폰 레르겐",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w082",
@@ -914,7 +1835,20 @@
       "노라가미",
       "noragami"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "야토",
+        "aliases": []
+      },
+      {
+        "name": "이키 히요리",
+        "aliases": []
+      },
+      {
+        "name": "유키네",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w083",
@@ -923,7 +1857,20 @@
     "aliases": [
       "호리야미"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "호리 쿄코",
+        "aliases": []
+      },
+      {
+        "name": "미야무라 이즈미",
+        "aliases": []
+      },
+      {
+        "name": "이시카와 토오루",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w084",
@@ -943,7 +1890,22 @@
       "단다단",
       "dandadan"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "타카쿠라 켄",
+        "aliases": [
+          "오카룬"
+        ]
+      },
+      {
+        "name": "아야세 모모",
+        "aliases": []
+      },
+      {
+        "name": "세이코",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w086",
@@ -953,7 +1915,20 @@
       "비스타즈",
       "beastars"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "레고시",
+        "aliases": []
+      },
+      {
+        "name": "하루",
+        "aliases": []
+      },
+      {
+        "name": "루이",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w087",
@@ -963,7 +1938,20 @@
       "나만이 없는",
       "erased"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "후지누마 사토루",
+        "aliases": []
+      },
+      {
+        "name": "히나즈키 카요",
+        "aliases": []
+      },
+      {
+        "name": "코바야시 켄야",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w088",
@@ -972,7 +1960,22 @@
     "aliases": [
       "불멸의 그대"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "불사",
+        "aliases": [
+          "후시"
+        ]
+      },
+      {
+        "name": "마치",
+        "aliases": []
+      },
+      {
+        "name": "관찰자",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w089",
@@ -982,7 +1985,24 @@
       "괴8",
       "kaiju no. 8"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "히비노 카프카",
+        "aliases": []
+      },
+      {
+        "name": "아시로 미나",
+        "aliases": []
+      },
+      {
+        "name": "이치카와 레노",
+        "aliases": []
+      },
+      {
+        "name": "시노미야 키코루",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w090",
@@ -992,7 +2012,30 @@
       "사펑",
       "cyberpunk edgerunners"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "데이비드 마르티네즈",
+        "aliases": []
+      },
+      {
+        "name": "루시나 \"루시\" 쿠시나다",
+        "aliases": [
+          "루시"
+        ]
+      },
+      {
+        "name": "메인",
+        "aliases": []
+      },
+      {
+        "name": "아담 스매셔",
+        "aliases": []
+      },
+      {
+        "name": "D",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w091",
@@ -1003,7 +2046,24 @@
       "그렌라간",
       "gurren lagann"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "카미나",
+        "aliases": []
+      },
+      {
+        "name": "시몬",
+        "aliases": []
+      },
+      {
+        "name": "요코 리트나",
+        "aliases": []
+      },
+      {
+        "name": "니아 텟페린",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w092",
@@ -1014,7 +2074,16 @@
       "타카기양",
       "takagi-san"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "타카기",
+        "aliases": []
+      },
+      {
+        "name": "니시카타",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w093",
@@ -1024,7 +2093,24 @@
       "코노스바",
       "konosuba"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "사토 카즈마",
+        "aliases": []
+      },
+      {
+        "name": "아쿠아",
+        "aliases": []
+      },
+      {
+        "name": "메구밍",
+        "aliases": []
+      },
+      {
+        "name": "다크니스",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w094",
@@ -1044,7 +2130,26 @@
       "고블린슬레이어",
       "goblin slayer"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "고블린 슬레이어",
+        "aliases": []
+      },
+      {
+        "name": "여신관",
+        "aliases": []
+      },
+      {
+        "name": "엘프 궁수",
+        "aliases": []
+      },
+      {
+        "name": "도화사",
+        "aliases": [
+          "지각자"
+        ]
+      }
+    ]
   },
   {
     "id": "w096",
@@ -1054,7 +2159,24 @@
       "던만추",
       "danmachi"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "벨 크라넬",
+        "aliases": []
+      },
+      {
+        "name": "헤스티아",
+        "aliases": []
+      },
+      {
+        "name": "아이즈 발렌슈타인",
+        "aliases": []
+      },
+      {
+        "name": "릴리루카 아데",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w097",
@@ -1064,7 +2186,24 @@
       "메이드인어비스",
       "made in abyss"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "리코",
+        "aliases": []
+      },
+      {
+        "name": "레그",
+        "aliases": []
+      },
+      {
+        "name": "나나치",
+        "aliases": []
+      },
+      {
+        "name": "푸르슈카 본드로드",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w098",
@@ -1074,7 +2213,28 @@
       "일곱대죄",
       "seven deadly sins"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "멜리오다스",
+        "aliases": []
+      },
+      {
+        "name": "엘리자베스 리오네스",
+        "aliases": []
+      },
+      {
+        "name": "호크",
+        "aliases": []
+      },
+      {
+        "name": "반",
+        "aliases": []
+      },
+      {
+        "name": "킹",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w099",
@@ -1085,7 +2245,20 @@
       "komi-san",
       "komi can't communicate"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "코미 쇼코",
+        "aliases": []
+      },
+      {
+        "name": "타다노 히토히토",
+        "aliases": []
+      },
+      {
+        "name": "나자미 오사나",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w100",
@@ -1095,7 +2268,28 @@
       "이니셜D",
       "initial d"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "후지와라 타쿠미",
+        "aliases": []
+      },
+      {
+        "name": "타카하시 케이스케",
+        "aliases": []
+      },
+      {
+        "name": "타카하시 료스케",
+        "aliases": []
+      },
+      {
+        "name": "나카자토 타케시",
+        "aliases": []
+      },
+      {
+        "name": "이누이 신지",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w101",
@@ -1105,7 +2299,24 @@
       "아픈싫방올",
       "bofuri"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "메이플",
+        "aliases": [
+          "본조 카에데"
+        ]
+      },
+      {
+        "name": "살리",
+        "aliases": [
+          "시라미네 리사"
+        ]
+      },
+      {
+        "name": "마이",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w102",
@@ -1115,7 +2326,24 @@
       "월간노자키",
       "nozaki-kun"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "노자키 우메타로",
+        "aliases": []
+      },
+      {
+        "name": "사쿠라 치요",
+        "aliases": []
+      },
+      {
+        "name": "미코시바 미코토",
+        "aliases": []
+      },
+      {
+        "name": "세오 즈키",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w103",
@@ -1126,7 +2354,24 @@
       "오레가이루",
       "oregairu"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "히키가야 하치만",
+        "aliases": []
+      },
+      {
+        "name": "유키노시타 유키노",
+        "aliases": []
+      },
+      {
+        "name": "유이가하마 유이",
+        "aliases": []
+      },
+      {
+        "name": "이시카와 이로하",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w104",
@@ -1137,7 +2382,24 @@
       "청춘돼지",
       "bunny girl senpai"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "아즈사가와 사쿠타",
+        "aliases": []
+      },
+      {
+        "name": "사쿠라지마 마이",
+        "aliases": []
+      },
+      {
+        "name": "아즈사가와 카에데",
+        "aliases": []
+      },
+      {
+        "name": "코가 토모에",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w105",
@@ -1148,7 +2410,24 @@
       "사쿠라장",
       "sakurasou"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "칸다 소라타",
+        "aliases": []
+      },
+      {
+        "name": "시이나 마시로",
+        "aliases": []
+      },
+      {
+        "name": "아오야마 나나미",
+        "aliases": []
+      },
+      {
+        "name": "카미구사 미사키",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w106",
@@ -1158,7 +2437,20 @@
       "종말에뭐하세요",
       "슈카슈카"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "빌렘 쿠메슈",
+        "aliases": []
+      },
+      {
+        "name": "크토리 노타 세니오리스",
+        "aliases": []
+      },
+      {
+        "name": "네프렌 루크 인살리니아",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w107",
@@ -1168,7 +2460,24 @@
       "너에게닿기를",
       "kimi ni todoke"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "쿠로누마 사와코",
+        "aliases": []
+      },
+      {
+        "name": "카제하야 쇼타",
+        "aliases": []
+      },
+      {
+        "name": "야노 아야네",
+        "aliases": []
+      },
+      {
+        "name": "요시다 치즈루",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w108",
@@ -1179,7 +2488,24 @@
       "중2병",
       "chuunibyou"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "토가시 유타",
+        "aliases": []
+      },
+      {
+        "name": "타카나시 리카",
+        "aliases": []
+      },
+      {
+        "name": "니부타니 신카",
+        "aliases": []
+      },
+      {
+        "name": "데코모리 사나에",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w109",
@@ -1189,7 +2515,20 @@
       "데빌맨",
       "devilman"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "후도 아키라",
+        "aliases": []
+      },
+      {
+        "name": "아스카 료",
+        "aliases": []
+      },
+      {
+        "name": "마키무라 미키",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w110",
@@ -1199,7 +2538,28 @@
       "단간론파",
       "danganronpa"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "나에기 마코토",
+        "aliases": []
+      },
+      {
+        "name": "키리키리 교코",
+        "aliases": []
+      },
+      {
+        "name": "에노시마 쥰코",
+        "aliases": []
+      },
+      {
+        "name": "히나타 하치메",
+        "aliases": []
+      },
+      {
+        "name": "모노쿠마",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w111",
@@ -1209,7 +2569,20 @@
       "플라스틱메모리즈",
       "plastic memories"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "미즈가키 츠카사",
+        "aliases": []
+      },
+      {
+        "name": "아이라",
+        "aliases": []
+      },
+      {
+        "name": "킨구시 카즈키",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w112",
@@ -1219,7 +2592,22 @@
       "나츠메",
       "natsume yuujinchou"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "나츠메 타카시",
+        "aliases": []
+      },
+      {
+        "name": "야옹선생",
+        "aliases": [
+          "마다라"
+        ]
+      },
+      {
+        "name": "나토리 슈이치",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w113",
@@ -1239,7 +2627,22 @@
       "살육의 천사",
       "angels of death"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "레이첼 가드너",
+        "aliases": []
+      },
+      {
+        "name": "잭",
+        "aliases": [
+          "아이작 포스터"
+        ]
+      },
+      {
+        "name": "다니엘 디킨스",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w115",
@@ -1249,7 +2652,20 @@
       "킬라킬",
       "kill la kill"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "마토이 류코",
+        "aliases": []
+      },
+      {
+        "name": "키류인 사츠키",
+        "aliases": []
+      },
+      {
+        "name": "만칸쇼쿠 마코",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w116",
@@ -1259,7 +2675,24 @@
       "새벽의 연화",
       "yona of the dawn"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "연화",
+        "aliases": []
+      },
+      {
+        "name": "학",
+        "aliases": []
+      },
+      {
+        "name": "윤",
+        "aliases": []
+      },
+      {
+        "name": "수원",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w117",
@@ -1280,7 +2713,24 @@
       "니세코이",
       "nisekoi"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "이치죠 라쿠",
+        "aliases": []
+      },
+      {
+        "name": "키리사키 치토게",
+        "aliases": []
+      },
+      {
+        "name": "오노데라 코사키",
+        "aliases": []
+      },
+      {
+        "name": "타치바나 마리카",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w119",
@@ -1291,7 +2741,28 @@
       "sgt frog",
       "keroro"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "케로로",
+        "aliases": []
+      },
+      {
+        "name": "강우주",
+        "aliases": [
+          "휴가 후유키"
+        ]
+      },
+      {
+        "name": "강한별",
+        "aliases": [
+          "휴가 나츠미"
+        ]
+      },
+      {
+        "name": "타마마",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w120",
@@ -1301,7 +2772,28 @@
       "일하는세포",
       "cells at work"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "적혈구",
+        "aliases": [
+          "AE3803"
+        ]
+      },
+      {
+        "name": "백혈구",
+        "aliases": [
+          "U-1146"
+        ]
+      },
+      {
+        "name": "킬러 T 세포",
+        "aliases": []
+      },
+      {
+        "name": "혈소판",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w121",
@@ -1311,7 +2803,26 @@
       "가면라이더",
       "kamen rider"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "혼고 타케시",
+        "aliases": [
+          "가면라이더 1호"
+        ]
+      },
+      {
+        "name": "노가미 료타로",
+        "aliases": [
+          "덴오"
+        ]
+      },
+      {
+        "name": "히노 에이지",
+        "aliases": [
+          "오즈"
+        ]
+      }
+    ]
   },
   {
     "id": "w122",
@@ -1321,7 +2832,20 @@
       "바라카몬",
       "barakamon"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "험다 세이슈",
+        "aliases": []
+      },
+      {
+        "name": "코토이시 나루",
+        "aliases": []
+      },
+      {
+        "name": "키도 히로시",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w123",
@@ -1331,7 +2855,20 @@
       "아이엠스타",
       "aikatsu"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "호시미야 이치고",
+        "aliases": []
+      },
+      {
+        "name": "키리야 아오이",
+        "aliases": []
+      },
+      {
+        "name": "시부키 란",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w124",
@@ -1341,7 +2878,24 @@
       "터닝메카드",
       "turning mecard"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "나찬",
+        "aliases": []
+      },
+      {
+        "name": "리안",
+        "aliases": []
+      },
+      {
+        "name": "이소벨",
+        "aliases": []
+      },
+      {
+        "name": "반다인",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w125",
@@ -1351,7 +2905,24 @@
       "사이코패스",
       "psycho pass"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "츠네모리 아카네",
+        "aliases": []
+      },
+      {
+        "name": "코가미 신야",
+        "aliases": []
+      },
+      {
+        "name": "기노자 노부치카",
+        "aliases": []
+      },
+      {
+        "name": "마키시마 쇼고",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w126",
@@ -1362,7 +2933,20 @@
       "ace of diamond",
       "다이아의 에이스"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "사와무라 에이준",
+        "aliases": []
+      },
+      {
+        "name": "후루야 사토루",
+        "aliases": []
+      },
+      {
+        "name": "미유키 카즈야",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w127",
@@ -1372,7 +2956,20 @@
       "미래일기",
       "future diary"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "아마노 유키테루",
+        "aliases": []
+      },
+      {
+        "name": "가사이 유노",
+        "aliases": []
+      },
+      {
+        "name": "우류 민네네",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w128",
@@ -1382,7 +2979,24 @@
       "사쿠재",
       "the disastrous life of saiki k."
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "사이키 쿠스오",
+        "aliases": []
+      },
+      {
+        "name": "카이도 슌",
+        "aliases": []
+      },
+      {
+        "name": "넨도 리키",
+        "aliases": []
+      },
+      {
+        "name": "테루하시 코코미",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w129",
@@ -1403,7 +3017,20 @@
       "big windup",
       "ookiku furikabutte"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "미하시 렌",
+        "aliases": []
+      },
+      {
+        "name": "아베 타카야",
+        "aliases": []
+      },
+      {
+        "name": "타지마 유이치로",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w131",
@@ -1414,7 +3041,24 @@
       "메이드래곤",
       "kobayashi dragon maid"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "코바야시",
+        "aliases": []
+      },
+      {
+        "name": "토르",
+        "aliases": []
+      },
+      {
+        "name": "칸나 카무이",
+        "aliases": []
+      },
+      {
+        "name": "엘마",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w132",
@@ -1424,7 +3068,20 @@
       "좀100",
       "zom 100"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "텐도 아키라",
+        "aliases": []
+      },
+      {
+        "name": "류자키 켄이치로",
+        "aliases": []
+      },
+      {
+        "name": "삼판 시즈카",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w133",
@@ -1435,7 +3092,26 @@
       "devil is a part timer",
       "하타라쿠 마오사마"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "마왕 사탄",
+        "aliases": [
+          "마오 사다오"
+        ]
+      },
+      {
+        "name": "용사 에밀리아",
+        "aliases": [
+          "유사 에미"
+        ]
+      },
+      {
+        "name": "아시아르",
+        "aliases": [
+          "아시야 시로"
+        ]
+      }
+    ]
   },
   {
     "id": "w134",
@@ -1445,7 +3121,20 @@
       "극주부도",
       "the way of the househusband"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "타츠",
+        "aliases": []
+      },
+      {
+        "name": "미쿠",
+        "aliases": []
+      },
+      {
+        "name": "마사",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w135",
@@ -1455,7 +3144,26 @@
       "몹사",
       "mob psycho 100"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "카게야마 시게오",
+        "aliases": [
+          "모브"
+        ]
+      },
+      {
+        "name": "레이겐 아라타카",
+        "aliases": []
+      },
+      {
+        "name": "카게야마 리츠",
+        "aliases": []
+      },
+      {
+        "name": "에쿠보",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w136",
@@ -1546,7 +3254,24 @@
       "trickcal revive",
       "트릭컬"
     ],
-    "characters": []
+    "characters": [
+      {
+        "name": "에르핀",
+        "aliases": []
+      },
+      {
+        "name": "시온",
+        "aliases": []
+      },
+      {
+        "name": "스피키",
+        "aliases": []
+      },
+      {
+        "name": "리스티",
+        "aliases": []
+      }
+    ]
   },
   {
     "id": "w145",

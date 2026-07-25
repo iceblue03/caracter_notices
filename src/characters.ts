@@ -1,20 +1,33 @@
-import { Character, Work } from './types';
+import { Character, Work, WorkCharacter } from './types';
 import worksData from './works.json';
+import characterFillsData from './characterFills.json';
 import { ANIME_TITLES } from './animeTitles';
 import { getBackgroundImage } from './workBackgrounds';
 
 /**
  * The classifier taxonomy. `works.json` is the source of truth: a scaffolded
- * list of works, each with a slot for `aliases` and 2-3 representative
+ * list of works, each with a slot for `aliases` and a handful of representative
  * `characters` that a sub-model fills in later.
  *
- * For the rest of the app we bridge each Work to one `Character` entry so all
- * existing components (Discover, feed, detail) keep working unchanged. A work's
- * match terms = its aliases + every representative character's name & aliases,
- * plus the work title itself (via `name`). This means a work matches posts even
- * before its aliases/characters are filled in.
+ * For the rest of the app we bridge each Work to one work-level `Character`
+ * entry (kind: 'work') so all existing components (Discover, feed, detail)
+ * keep working unchanged, AND expand every representative character into its
+ * own character-level `Character` entry (kind: 'character') so users can
+ * subscribe to just that character. A work's match terms = its aliases + every
+ * representative character's name & aliases, plus the work title itself (via
+ * `name`) — so a work still matches posts even before its aliases/characters
+ * are filled in, and subscribing to the work is always a superset of
+ * subscribing to any one of its characters.
  */
 const CURATED_WORKS = worksData as Work[];
+
+/**
+ * `works.json` only hand-curates representative characters for a subset of
+ * works; `characterFills.json` is a bulk import (title -> characters) covering
+ * the rest. A work that already has `characters` filled always wins — this
+ * only ever fills in the gap, never overrides hand-curated data.
+ */
+const CHARACTER_FILLS = characterFillsData as Record<string, WorkCharacter[]>;
 
 // `works.json` contains the curated classifier data. Keep the rest of the CSV
 // selectable too; these entries can already match their exact title and can be
@@ -37,10 +50,16 @@ const CSV_WORKS: Work[] = ANIME_TITLES.filter((title) => !CURATED_TITLES.has(tit
   }),
 );
 
-export const WORKS = [...CURATED_WORKS, ...CSV_WORKS];
+export const WORKS: Work[] = [...CURATED_WORKS, ...CSV_WORKS].map((work) =>
+  work.characters.length > 0
+    ? work
+    : { ...work, characters: CHARACTER_FILLS[work.title] ?? [] },
+);
 
-// Deterministic, copyright-safe visuals derived from the work id (stable across
-// reloads, no artwork involved).
+// Deterministic, copyright-safe visuals derived from the entry's own id
+// (stable across reloads, no artwork involved). Characters and works share
+// this pool, hashed off their own id, so siblings within a work still land on
+// visually distinct emoji/gradients.
 const EMOJI_POOL = [
   '🌀', '✨', '🔥', '🌸', '⭐', '🎋', '🗡️', '⚡', '🎮', '🐉',
   '🍥', '🎧', '🌙', '💫', '🎨', '🩸', '👊', '🛡️', '🎭', '🧪',
@@ -60,6 +79,10 @@ function hash(s: string): number {
   return h;
 }
 
+function categoryEnOf(category: string): string {
+  return category === '게임' ? 'Game' : category === '애니메이션' ? 'Anime' : 'Contents';
+}
+
 function toCharacter(work: Work, index: number): Character {
   const gradient = GRADIENTS[hash(work.id) % GRADIENTS.length];
   const emoji = EMOJI_POOL[hash(work.id) % EMOJI_POOL.length];
@@ -72,8 +95,11 @@ function toCharacter(work: Work, index: number): Character {
     id: work.id,
     name: work.title,
     nameEn,
-    series: work.category,
-    seriesEn: work.category === '게임' ? 'Game' : work.category === '애니메이션' ? 'Anime' : 'Contents',
+    series: work.title,
+    seriesEn: nameEn,
+    category: work.category,
+    categoryEn: categoryEnOf(work.category),
+    kind: 'work',
     role: repNames.length ? repNames.join(' · ') : '대표 캐릭터 미정',
     emoji,
     color: gradient[1],
@@ -91,6 +117,43 @@ function toCharacter(work: Work, index: number): Character {
 }
 
 /**
+ * One representative character within `work`, as its own subscribable
+ * catalog entry. No character art exists for any of these, so — same as any
+ * work with no cover image on disk — it always falls back to the deterministic
+ * gradient avatar rather than inventing a visual treatment that would make
+ * some entries look "finished" and others not.
+ */
+function toChildCharacter(work: Work, parent: Character, wc: WorkCharacter, index: number): Character {
+  const id = `${work.id}c${index + 1}`;
+  const gradient = GRADIENTS[hash(id) % GRADIENTS.length];
+  const emoji = EMOJI_POOL[hash(id) % EMOJI_POOL.length];
+  const nameEn = wc.aliases.find((a) => /[a-z]/i.test(a)) ?? '';
+  const keywords = [...new Set([wc.name, ...wc.aliases].filter(Boolean))];
+
+  return {
+    id,
+    name: wc.name,
+    nameEn,
+    series: work.title,
+    seriesEn: parent.nameEn,
+    category: work.category,
+    categoryEn: parent.categoryEn,
+    kind: 'character',
+    workId: work.id,
+    role: '대표 캐릭터',
+    emoji,
+    color: gradient[1],
+    gradient,
+    backgroundImage: undefined,
+    popularity: parent.popularity,
+    tagline: `「${work.title}」에 등장하는 캐릭터예요. 구독하면 이 캐릭터 소식만 모아볼 수 있어요.`,
+    keywords,
+    hashtags: [],
+    sourceAccounts: [],
+  };
+}
+
+/**
  * Fallback bucket for posts that don't match any work's keywords. Without
  * this, a post with zero matches would be silently dropped from every feed
  * view — appending this to CHARACTERS guarantees every post lands somewhere.
@@ -103,6 +166,9 @@ const MISC_CHARACTER: Character = {
   nameEn: 'Uncategorized',
   series: '기타',
   seriesEn: 'Uncategorized',
+  category: '기타',
+  categoryEn: 'Uncategorized',
+  kind: 'work',
   role: '분류되지 않은 소식',
   emoji: '📰',
   color: '#64748b',
@@ -114,7 +180,12 @@ const MISC_CHARACTER: Character = {
   sourceAccounts: [],
 };
 
-export const CHARACTERS: Character[] = [...WORKS.map(toCharacter), MISC_CHARACTER];
+const WORK_CHARACTERS: Character[] = WORKS.map(toCharacter);
+const CHILD_CHARACTERS: Character[] = WORKS.flatMap((work, index) =>
+  work.characters.map((wc, i) => toChildCharacter(work, WORK_CHARACTERS[index], wc, i)),
+);
+
+export const CHARACTERS: Character[] = [...WORK_CHARACTERS, ...CHILD_CHARACTERS, MISC_CHARACTER];
 
 export const CHARACTER_MAP: Record<string, Character> = Object.fromEntries(
   CHARACTERS.map((c) => [c.id, c]),
@@ -124,18 +195,31 @@ export function getCharacter(id: string): Character | undefined {
   return CHARACTER_MAP[id];
 }
 
-/** All distinct series (categories), ordered by combined popularity. */
-export function getSeriesList(): { series: string; seriesEn: string; characters: Character[] }[] {
-  const bySeries = new Map<string, Character[]>();
+const CHILDREN_BY_WORK_ID = new Map<string, Character[]>();
+for (const c of CHILD_CHARACTERS) {
+  const list = CHILDREN_BY_WORK_ID.get(c.workId!) ?? [];
+  list.push(c);
+  CHILDREN_BY_WORK_ID.set(c.workId!, list);
+}
+
+/** A work's representative characters, in curation order — empty if none are picked yet. */
+export function getChildCharacters(workId: string): Character[] {
+  return CHILDREN_BY_WORK_ID.get(workId) ?? [];
+}
+
+/** All distinct content categories, ordered by their most popular work. Work-level entries only — a work's own characters render inline on its card instead of forming their own category groups. */
+export function getCategoryList(): { category: string; categoryEn: string; characters: Character[] }[] {
+  const byCategory = new Map<string, Character[]>();
   for (const c of CHARACTERS) {
-    const list = bySeries.get(c.series) ?? [];
+    if (c.kind !== 'work') continue;
+    const list = byCategory.get(c.category) ?? [];
     list.push(c);
-    bySeries.set(c.series, list);
+    byCategory.set(c.category, list);
   }
-  return [...bySeries.entries()]
-    .map(([series, characters]) => ({
-      series,
-      seriesEn: characters[0].seriesEn,
+  return [...byCategory.entries()]
+    .map(([category, characters]) => ({
+      category,
+      categoryEn: characters[0].categoryEn,
       characters: characters.slice().sort((a, b) => b.popularity - a.popularity),
     }))
     .sort(
