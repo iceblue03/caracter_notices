@@ -1,9 +1,9 @@
-import { Home, Compass, Plus, Sparkles, BarChart3 } from 'lucide-react';
+import { Home, Compass, Plus, Sparkles, ShoppingBag, BarChart3 } from 'lucide-react';
 import { Character } from '../types';
 import { catalogSubtitle } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
 
-type Active = 'feed' | 'discover' | 'character' | 'stats';
+type Active = 'feed' | 'discover' | 'goods' | 'character' | 'stats';
 
 interface Props {
   active: Active;
@@ -11,6 +11,7 @@ interface Props {
   subscribed: Character[];
   onFeed: () => void;
   onDiscover: () => void;
+  onGoods: () => void;
   onSelectCharacter: (id: string) => void;
   /** Internal stats dashboard — only rendered when this device opted in (see App's admin flag). */
   showStats?: boolean;
@@ -23,6 +24,7 @@ export function Sidebar({
   subscribed,
   onFeed,
   onDiscover,
+  onGoods,
   onSelectCharacter,
   showStats,
   onStats,
@@ -48,6 +50,12 @@ export function Sidebar({
           label="캐릭터 탐색"
           active={active === 'discover'}
           onClick={onDiscover}
+        />
+        <NavItem
+          icon={<ShoppingBag size={19} />}
+          label="굿즈"
+          active={active === 'goods'}
+          onClick={onGoods}
         />
         {showStats && onStats && (
           <NavItem icon={<BarChart3 size={19} />} label="통계" active={active === 'stats'} onClick={onStats} />

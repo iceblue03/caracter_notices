@@ -1,27 +1,32 @@
-import { ArrowLeft, Check, Plus, Inbox } from 'lucide-react';
-import { Character, FeedPost } from '../types';
+import { ArrowLeft, Check, Plus, Inbox, ShoppingBag, ChevronRight } from 'lucide-react';
+import { Character, FeedPost, GoodsListing } from '../types';
 import { getCharacter } from '../characters';
 import { catalogSubtitle, gradientStyle, relativeTime } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
 import { PostCard } from './PostCard';
+import { GoodsCard } from './GoodsCard';
 
 interface Props {
   character: Character;
   posts: FeedPost[]; // posts about this character, newest-first
+  goods: GoodsListing[]; // goods listings about this character, newest-first
   subscribed: boolean;
   subscribedIds: string[];
   onToggle: () => void;
   onSelectCharacter: (id: string) => void;
+  onOpenGoods: (characterId?: string) => void;
   onBack: () => void;
 }
 
 export function CharacterDetailView({
   character,
   posts,
+  goods,
   subscribed,
   subscribedIds,
   onToggle,
   onSelectCharacter,
+  onOpenGoods,
   onBack,
 }: Props) {
   const latest = posts[0];
@@ -124,6 +129,26 @@ export function CharacterDetailView({
             </span>
           ))}
         </div>
+
+        {goods.length > 0 && (
+          <>
+            <hr className="my-6 border-slate-200" />
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-slate-800">{character.name} 굿즈 매물</h2>
+              <button
+                onClick={() => onOpenGoods(character.id)}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-violet-600 hover:text-violet-700"
+              >
+                <ShoppingBag size={14} /> 더보기 <ChevronRight size={14} />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {goods.slice(0, 6).map((listing) => (
+                <GoodsCard key={listing.id} listing={listing} onSelectCharacter={onSelectCharacter} />
+              ))}
+            </div>
+          </>
+        )}
 
         <hr className="my-6 border-slate-200" />
 

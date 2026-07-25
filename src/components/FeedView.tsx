@@ -1,31 +1,43 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Compass, CircleOff, Inbox } from 'lucide-react';
-import { Character, FeedPost } from '../types';
+import { Compass, CircleOff, Inbox, ShoppingBag, ChevronRight } from 'lucide-react';
+import { Character, FeedPost, GoodsListing } from '../types';
 import { EventFeature } from '../events';
 import { trackFeatureUse } from '../lib/analytics';
 import { EventBanner } from './EventBanner';
 import { PostCard } from './PostCard';
+import { GoodsCard } from './GoodsCard';
 import { CharacterAvatar } from './CharacterAvatar';
+import { FilterPill } from './FilterPill';
 
 interface Props {
   subscribed: Character[];
   posts: FeedPost[]; // already filtered to subscriptions, annotated, newest-first
+  /** Goods listings matched to each character id — mixed into the feed when that character is the active filter. */
+  goodsByCharacter: Record<string, GoodsListing[]>;
   /** Real events announced in the collected posts, soonest-first. */
   events: EventFeature[];
   live: boolean;
   syncNote?: string;
   onSelectCharacter: (id: string) => void;
   onDiscover: () => void;
+  /** Jump to the Goods tab, optionally pre-filtered to a character. */
+  onOpenGoods: (characterId?: string) => void;
 }
+
+type FeedEntry =
+  | { kind: 'post'; key: string; timestamp: number; post: FeedPost }
+  | { kind: 'goods'; key: string; timestamp: number; listing: GoodsListing };
 
 export function FeedView({
   subscribed,
   posts,
+  goodsByCharacter,
   events,
   live,
   syncNote,
   onSelectCharacter,
   onDiscover,
+  onOpenGoods,
 }: Props) {
   const [genre, setGenre] = useState<string>('all');
   const [filter, setFilter] = useState<string>('all');
@@ -67,6 +79,31 @@ export function FeedView({
     }
     return result;
   }, [posts, genre, filter, seriesById]);
+
+  // Goods listings for the currently-selected character only — kept out of
+  // "전체" so the unfiltered feed isn't cluttered with every character's
+  // matched listings (매물) at once. Picking a character mixes theirs in.
+  const selectedGoods = useMemo(
+    () => (filter === 'all' ? [] : goodsByCharacter[filter] ?? []),
+    [filter, goodsByCharacter],
+  );
+
+  const visibleEntries = useMemo<FeedEntry[]>(() => {
+    const postEntries: FeedEntry[] = visiblePosts.map((post) => ({
+      kind: 'post',
+      key: `post:${post.id}`,
+      timestamp: post.timestamp,
+      post,
+    }));
+    if (selectedGoods.length === 0) return postEntries;
+    const goodsEntries: FeedEntry[] = selectedGoods.map((listing) => ({
+      kind: 'goods',
+      key: `goods:${listing.id}`,
+      timestamp: listing.timestamp,
+      listing,
+    }));
+    return [...postEntries, ...goodsEntries].sort((a, b) => b.timestamp - a.timestamp);
+  }, [visiblePosts, selectedGoods]);
 
   const subscribedIds = useMemo(() => subscribed.map((c) => c.id), [subscribed]);
 
@@ -156,8 +193,21 @@ export function FeedView({
         </div>
       )}
 
-      {/* Posts */}
-      {visiblePosts.length === 0 ? (
+      {/* When a specific character is selected, surface a shortcut to their full goods listing */}
+      {filter !== 'all' && selectedGoods.length > 0 && (
+        <button
+          onClick={() => onOpenGoods(filter)}
+          className="w-full flex items-center justify-between gap-2 mb-4 px-3.5 py-2.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 transition-colors"
+        >
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold">
+            <ShoppingBag size={15} /> 이 캐릭터 굿즈 매물 {selectedGoods.length}건
+          </span>
+          <ChevronRight size={16} />
+        </button>
+      )}
+
+      {/* Posts (+ that character's goods listings, mixed in by recency) */}
+      {visibleEntries.length === 0 ? (
         <div className="text-center py-16 text-slate-400">
           <Inbox size={32} className="mx-auto mb-3 opacity-60" />
           <p className="font-medium text-slate-500">아직 이 캐릭터의 새 소식이 없어요</p>
@@ -165,44 +215,26 @@ export function FeedView({
         </div>
       ) : (
         <div className="space-y-5">
-          {visiblePosts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              highlightIds={subscribedIds}
-              onSelectCharacter={onSelectCharacter}
-            />
-          ))}
+          {visibleEntries.map((entry) =>
+            entry.kind === 'post' ? (
+              <PostCard
+                key={entry.key}
+                post={entry.post}
+                highlightIds={subscribedIds}
+                onSelectCharacter={onSelectCharacter}
+              />
+            ) : (
+              <GoodsCard
+                key={entry.key}
+                listing={entry.listing}
+                variant="feed"
+                onSelectCharacter={onSelectCharacter}
+              />
+            ),
+          )}
         </div>
       )}
     </div>
-  );
-}
-
-function FilterPill({
-  active,
-  onClick,
-  children,
-  compact,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  compact?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`shrink-0 inline-flex items-center gap-1.5 rounded-full font-semibold border transition-colors ${
-        compact ? 'px-3 py-1 text-xs' : 'pl-1 pr-3 py-1 text-sm'
-      } ${
-        active
-          ? 'bg-slate-900 text-white border-slate-900'
-          : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 

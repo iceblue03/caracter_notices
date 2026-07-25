@@ -86,7 +86,7 @@ function closeCurrentView() {
 export type PageViewMethod = 'initial' | 'nav' | 'chip' | 'card' | 'back_button' | 'discover_cta' | 'sidebar';
 
 export function trackPageView(
-  view: 'feed' | 'discover' | 'character' | 'stats',
+  view: 'feed' | 'discover' | 'character' | 'stats' | 'goods',
   opts: { id?: string; name?: string; method?: PageViewMethod } = {},
 ) {
   closeCurrentView();

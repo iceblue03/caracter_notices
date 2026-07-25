@@ -1,9 +1,16 @@
-import { Character, FeedPost } from '../types';
+import { Character, FeedPost, GoodsListing } from '../types';
 
 export interface SyncResult {
   posts: FeedPost[];
   live: boolean;
   reason?: string;
+}
+
+export interface GoodsSyncResult {
+  listings: GoodsListing[];
+  live: boolean;
+  reason?: string;
+  error?: string;
 }
 
 /**
@@ -55,5 +62,27 @@ export async function translatePost(content: string, target = 'ko'): Promise<Tra
     return await res.json();
   } catch (err: any) {
     return { translated: null, error: err?.message };
+  }
+}
+
+/**
+ * Ask the server for 당근마켓/번개장터 goods listings from its shared,
+ * cost-guarded cache. Same `force` contract as syncLiveFeed: `false` only
+ * reads the cache (or bundled seed), `true` may trigger a real Apify scrape
+ * if the cache is stale. Unlike the news feed, goods starts with an EMPTY
+ * seed, so a manual refresh is the only way to ever populate it.
+ */
+export async function syncGoods(force = false): Promise<GoodsSyncResult> {
+  try {
+    const res = await fetch('/api/goods/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ force }),
+    });
+    const data = await res.json();
+    if (!res.ok) return { listings: [], live: false, reason: data.error || 'request-failed' };
+    return { listings: data.listings ?? [], live: data.live ?? false, reason: data.reason, error: data.error };
+  } catch (err: any) {
+    return { listings: [], live: false, reason: err?.message || 'network-error' };
   }
 }

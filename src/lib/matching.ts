@@ -1,4 +1,4 @@
-import { Character, FeedPost, PostMatch } from '../types';
+import { Character, FeedPost, GoodsListing, PostMatch } from '../types';
 import { MISC_ID } from '../characters';
 
 /** Lowercase + collapse whitespace so matching is case/spacing-insensitive. */
@@ -56,4 +56,18 @@ export function annotatePost(post: FeedPost, characters: Character[]): FeedPost 
     return { ...post, matches: [{ characterId: MISC_ID, score: 0, terms: [] }] };
   }
   return { ...post, matches };
+}
+
+/** Text we scan for a goods listing: title + description. */
+function goodsHaystack(listing: GoodsListing): string {
+  return `${listing.title} ${listing.description ?? ''}`;
+}
+
+/** Same as annotatePost, for marketplace listings (Goods tab). */
+export function annotateGoods(listing: GoodsListing, characters: Character[]): GoodsListing {
+  const matches = matchText(goodsHaystack(listing), characters);
+  if (matches.length === 0) {
+    return { ...listing, matches: [{ characterId: MISC_ID, score: 0, terms: [] }] };
+  }
+  return { ...listing, matches };
 }
