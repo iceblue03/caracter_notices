@@ -145,7 +145,7 @@ function rankOf(score: number) {
   return [...RANKS].reverse().find((r) => score >= r.min) ?? RANKS[0];
 }
 
-/** What 오조 says back when a particular option is switched on. */
+/** What 미쿠 says back when a particular option is switched on. */
 const PICK_REPLIES: Record<string, string> = {
   '여성향': '여성향 담당이시군요. 확실하게 챙겨둘게요.',
   '남성향': '남성향도 같이 보시는군요. 메모했어요.',
@@ -175,7 +175,7 @@ function workReply(title: string, count: number): string {
 function baseLine(step: number, picked: number, score: number, rankName: string): string {
   switch (step) {
     case 0:
-      return '어서 오세요. 안내를 맡은 「오조」예요. 취향만 알려주시면 흩어진 최애 소식을 전부 물어다 드릴게요.';
+      return '어서 오세요! 안내를 맡은 미쿠예요. 취향만 알려주시면 흩어진 최애 소식을 전부 물어다 드릴게요.';
     case 1:
       return '어떤 세계에서 노시나요? 여러 개 고르셔도 괜찮아요.';
     case 2:
@@ -571,21 +571,23 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
   );
 }
 
-/** 오조 and her speech bubble: beside the form on desktop, above it on mobile. */
+/** 미쿠 and her speech bubble: beside the form on desktop, above it on mobile. */
 function Guide({ line, mood }: { line: string; mood: 'idle' | 'happy' }) {
   return (
     <aside className="flex items-center gap-3 lg:sticky lg:top-6 lg:block">
-      <GuideMascot
-        mood={mood}
-        className="order-1 w-16 shrink-0 lg:order-none lg:mx-auto lg:w-44"
-      />
+      {/* Mobile: head-and-shoulders crop. Desktop: full-body standee. */}
+      <div className="order-1 h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-violet-100 bg-gradient-to-b from-violet-50 to-white lg:hidden">
+        <GuideMascot mood={mood} fit="cover" />
+      </div>
+      <GuideMascot mood={mood} className="order-1 hidden w-44 lg:mx-auto lg:block" />
+
       <div className="order-2 min-w-0 flex-1 lg:order-none lg:mt-1">
         <div
           key={line}
           className="ok-bubble relative rounded-2xl border border-violet-100 bg-white px-4 py-3 shadow-[0_14px_30px_-22px_rgba(124,58,237,0.9)]"
         >
           <span className="mb-1 flex items-center gap-1.5 text-[10px] font-black tracking-[0.2em] text-violet-500">
-            <Sparkles size={11} /> 오조
+            <Sparkles size={11} /> 미쿠
           </span>
           <p className="text-[13px] font-semibold leading-relaxed text-slate-600">{line}</p>
 

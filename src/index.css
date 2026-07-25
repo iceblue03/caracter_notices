@@ -71,17 +71,9 @@ body {
 }
 
 /* — signs of life on the guide ———————————————————————————————————— */
-@keyframes ok-blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.08); }
-}
 @keyframes ok-breathe {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
-}
-@keyframes ok-orbit {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(3px, -7px) rotate(14deg); }
 }
 @keyframes ok-gauge-shine {
   0% { transform: translateX(-110%); }
@@ -93,15 +85,6 @@ body {
 .ok-flash { animation: ok-flash 460ms ease-out forwards; }
 .ok-bubble { animation: ok-bubble 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 .ok-breathe { animation: ok-breathe 4.2s ease-in-out infinite; }
-.ok-orbit { animation: ok-orbit 5.5s ease-in-out infinite; }
-
-/* SVG needs `fill-box` for `transform-origin: center` to mean the eye itself. */
-.ok-eye {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: ok-blink 6s ease-in-out infinite;
-}
-.ok-eye-r { animation-delay: 40ms; }
 
 .ok-gauge-shine::after {
   content: '';
@@ -164,8 +147,6 @@ body {
   .ok-flash,
   .ok-bubble,
   .ok-breathe,
-  .ok-orbit,
-  .ok-eye,
   .ok-gauge-shine::after {
     animation: none;
   }
