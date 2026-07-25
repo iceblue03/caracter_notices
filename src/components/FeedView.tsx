@@ -21,18 +21,56 @@ export function FeedView({
   onSelectCharacter,
   onDiscover,
 }: Props) {
+  const [genre, setGenre] = useState<string>('all');
   const [filter, setFilter] = useState<string>('all');
 
+  // Genres present among the user's subscriptions, in the order they first
+  // appear (subscribed is popularity-ordered already).
+  const genres = useMemo(() => {
+    const seen = new Set<string>();
+    const list: string[] = [];
+    for (const c of subscribed) {
+      if (!seen.has(c.series)) {
+        seen.add(c.series);
+        list.push(c.series);
+      }
+    }
+    return list;
+  }, [subscribed]);
+
+  const seriesById = useMemo(
+    () => new Map(subscribed.map((c) => [c.id, c.series])),
+    [subscribed],
+  );
+
+  // Characters shown in the rail: narrowed to the selected genre, if any.
+  const railCharacters = useMemo(
+    () => (genre === 'all' ? subscribed : subscribed.filter((c) => c.series === genre)),
+    [subscribed, genre],
+  );
+
   const visiblePosts = useMemo(() => {
-    if (filter === 'all') return posts;
-    return posts.filter((p) => p.matches?.some((m) => m.characterId === filter));
-  }, [posts, filter]);
+    let result = posts;
+    if (genre !== 'all') {
+      result = result.filter((p) =>
+        p.matches?.some((m) => seriesById.get(m.characterId) === genre),
+      );
+    }
+    if (filter !== 'all') {
+      result = result.filter((p) => p.matches?.some((m) => m.characterId === filter));
+    }
+    return result;
+  }, [posts, genre, filter, seriesById]);
 
   const subscribedIds = useMemo(() => subscribed.map((c) => c.id), [subscribed]);
 
   useEffect(() => {
-    if (filter !== 'all' && !subscribedIds.includes(filter)) setFilter('all');
-  }, [filter, subscribedIds]);
+    if (genre !== 'all' && !genres.includes(genre)) setGenre('all');
+  }, [genre, genres]);
+
+  useEffect(() => {
+    if (filter !== 'all' && !railCharacters.some((c) => c.id === filter)) setFilter('all');
+  }, [filter, railCharacters]);
 
   if (subscribed.length === 0) {
     return (
@@ -58,6 +96,25 @@ export function FeedView({
         </div>
       </div>
 
+      {/* Genre filter rail */}
+      {genres.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-1 scrollbar-none">
+          <FilterPill active={genre === 'all'} onClick={() => setGenre('all')} compact>
+            전체 장르
+          </FilterPill>
+          {genres.map((g) => (
+            <FilterPill
+              key={g}
+              active={genre === g}
+              onClick={() => setGenre((current) => (current === g ? 'all' : g))}
+              compact
+            >
+              {g}
+            </FilterPill>
+          ))}
+        </div>
+      )}
+
       {/* Character filter rail */}
       <div className="flex gap-2 overflow-x-auto pb-3 -mx-1 px-1 mb-2 scrollbar-none">
         <FilterPill active={filter === 'all'} onClick={() => setFilter('all')}>
@@ -66,7 +123,7 @@ export function FeedView({
           </span>
           전체
         </FilterPill>
-        {subscribed.map((c) => (
+        {railCharacters.map((c) => (
           <FilterPill
             key={c.id}
             active={filter === c.id}
@@ -111,15 +168,19 @@ function FilterPill({
   active,
   onClick,
   children,
+  compact,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  compact?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`shrink-0 inline-flex items-center gap-1.5 pl-1 pr-3 py-1 rounded-full text-sm font-semibold border transition-colors ${
+      className={`shrink-0 inline-flex items-center gap-1.5 rounded-full font-semibold border transition-colors ${
+        compact ? 'px-3 py-1 text-xs' : 'pl-1 pr-3 py-1 text-sm'
+      } ${
         active
           ? 'bg-slate-900 text-white border-slate-900'
           : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'

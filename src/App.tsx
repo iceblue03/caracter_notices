@@ -96,8 +96,7 @@ export default function App() {
       <TasteLanding
         postCounts={postCounts}
         onComplete={({ workIds, profile }) => {
-          const nextIds = [...workIds, 'misc'];
-          replace(nextIds);
+          replace(workIds);
           setPreferenceIds(workIds);
           localStorage.setItem('ojosama.preferences', JSON.stringify(workIds));
           localStorage.setItem('ojosama.profile', JSON.stringify(profile));
