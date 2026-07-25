@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Home, Compass, Sparkles } from 'lucide-react';
 import { CHARACTERS, getCharacter } from './characters';
 import { SAMPLE_POSTS } from './data';
+import { resolveFeaturedEvents } from './events';
 import { annotatePost } from './lib/matching';
 import { syncLiveFeed } from './lib/api';
 import { Character, FeedPost } from './types';
@@ -52,6 +53,11 @@ export default function App() {
     const subs = new Set(ids);
     return annotatedPosts.filter((p) => p.matches?.some((m) => subs.has(m.characterId)));
   }, [annotatedPosts, ids]);
+
+  // Real events announced in the collected posts — the home feed banner. Runs
+  // off every known post, not just the subscribed ones: an event is worth
+  // surfacing even when its announcement didn't match a subscription.
+  const featuredEvents = useMemo(() => resolveFeaturedEvents(annotatedPosts), [annotatedPosts]);
 
   // How many known posts mention each character (for Discover badges).
   const postCounts = useMemo(() => {
@@ -134,6 +140,7 @@ export default function App() {
           <FeedView
             subscribed={subscribedCharacters}
             posts={feedPosts}
+            events={featuredEvents}
             live={live}
             syncNote={syncNote}
             onSelectCharacter={openCharacter}

@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Compass, CircleOff, Inbox } from 'lucide-react';
 import { Character, FeedPost } from '../types';
+import { EventFeature } from '../events';
+import { EventBanner } from './EventBanner';
 import { PostCard } from './PostCard';
 import { CharacterAvatar } from './CharacterAvatar';
 
 interface Props {
   subscribed: Character[];
   posts: FeedPost[]; // already filtered to subscriptions, annotated, newest-first
+  /** Real events announced in the collected posts, soonest-first. */
+  events: EventFeature[];
   live: boolean;
   syncNote?: string;
   onSelectCharacter: (id: string) => void;
@@ -16,6 +20,7 @@ interface Props {
 export function FeedView({
   subscribed,
   posts,
+  events,
   live,
   syncNote,
   onSelectCharacter,
@@ -42,6 +47,9 @@ export function FeedView({
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
+      {/* Featured real-world event, pulled from the collected posts */}
+      <EventBanner features={events} />
+
       {/* Header */}
       <div className="flex items-end justify-between gap-4 mb-5">
         <div>

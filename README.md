@@ -19,6 +19,8 @@ Apify 토큰이 없어도 번들된 **샘플 소식**으로 전체 흐름이 그
 
 ## 주요 화면
 
+- **홈 피드** — 맨 위 **행사 배너**(수집된 게시물에서 뽑은 실제 행사, 개막일 순 · D-day 표시)
+  아래로 구독 캐릭터의 소식만. 상단 칩으로 특정 캐릭터만 골라 보기.
 - **입덕 온보딩** — 첫 방문 시 5스테이지 취향 입력. 안내 캐릭터 미쿠가 선택마다
   말을 걸고, 답할수록 차오르는 덕력 게이지, 작품 표지 아트로 고르는 작품 선택,
   마지막엔 오시 카드(OSHI PASS) 발급.
@@ -50,11 +52,16 @@ server.ts                 Express: 이미지 프록시 · /api/feed/sync · /api
 src/
   characters.ts           구독 가능한 캐릭터 카탈로그 (키워드·해시태그·소스 계정)
   data.ts                 번들 샘플 소식
+  events.ts               수집된 게시물에서 추린 실제 행사 (홈 피드 배너용)
   types.ts                Character · FeedPost · PostMatch 타입
   lib/matching.ts         캐릭터 관련도 매칭/필터 (서버·클라 공용)
   lib/{utils,api}.ts       시간·이미지·색상 유틸 / 백엔드 호출
   hooks/useSubscriptions.ts   구독 상태(로컬 스토리지)
-  components/             Sidebar · FeedView · DiscoverView · CharacterDetailView · PostCard …
+  components/             Sidebar · FeedView · EventBanner · DiscoverView · CharacterDetailView · PostCard …
 ```
 
 > 캐릭터 아바타는 저작권 이슈를 피하기 위해 이모지 + 그라데이션으로 표현합니다.
+
+> 행사 배너 이미지는 원본 게시물의 사진을 그대로 쓰지 않고, 마스크로 왼쪽 경계를 선 따서
+> 배너 그라데이션에 녹여 넣습니다. 사진이 없는 게시물이나 로드 실패 시에는 자체 라인아트로
+> 대체합니다.
