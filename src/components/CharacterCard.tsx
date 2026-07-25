@@ -50,6 +50,14 @@ export function CharacterCard({
             {character.emoji}
           </span>
         )}
+        {/* Marks a card as one representative character within a work — surfaced as its
+            own independent result (e.g. searching "루피" returns this alongside 원피스,
+            not nested inside it), so this tells the two apart at a glance. */}
+        {character.kind === 'character' && (
+          <span className="absolute left-2 top-2 rounded-full bg-black/45 backdrop-blur px-2 py-0.5 text-[10px] font-bold tracking-wide text-white">
+            등장인물
+          </span>
+        )}
       </button>
 
       <div className="relative z-10 px-4 pb-4 -mt-8">

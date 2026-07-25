@@ -11,10 +11,12 @@ interface Props {
   onToggle: (id: string) => void;
   onOpen: (id: string) => void;
   preferenceIds: string[];
+  /** Pre-fills the search box — used when arriving here from the home feed's "전체 검색" handoff. */
+  initialQuery?: string;
 }
 
-export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen, preferenceIds }: Props) {
-  const [query, setQuery] = useState('');
+export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen, preferenceIds, initialQuery }: Props) {
+  const [query, setQuery] = useState(initialQuery ?? '');
 
   const q = query.trim().toLowerCase();
   const matches = useMemo(() => {
