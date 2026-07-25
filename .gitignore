@@ -8,3 +8,6 @@ coverage/
 !.env.example
 .claude/
 package-lock.json
+
+# Runtime user-testing telemetry — accumulates locally, shouldn't be committed.
+data/analytics-store.json

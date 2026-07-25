@@ -1,3 +1,5 @@
+import { Character } from '../types';
+
 /** Format an epoch-ms timestamp as a Korean relative time, e.g. "3시간 전". */
 export function relativeTime(timestamp: number): string {
   const diff = Date.now() - timestamp;
@@ -39,6 +41,16 @@ export function colorFromString(s: string): string {
   for (let i = 0; i < s.length; i++) hash = (hash << 5) - hash + s.charCodeAt(i);
   const hue = Math.abs(hash) % 360;
   return `hsl(${hue} 62% 52%)`;
+}
+
+/**
+ * The contextual line shown under a catalog entry's name: which work a
+ * character belongs to, or which category a work sits in. Showing `series`
+ * for a work too would just repeat its own name (`series` is the work's own
+ * title), so this picks whichever field is actually informative for the kind.
+ */
+export function catalogSubtitle(character: Pick<Character, 'kind' | 'series' | 'category'>): string {
+  return character.kind === 'character' ? character.series : character.category;
 }
 
 /** Strip raw URLs from post text — "원본 보기" already links to the source. */

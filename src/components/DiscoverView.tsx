@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Search, TrendingUp } from 'lucide-react';
 import { Character } from '../types';
-import { CHARACTERS, getSeriesList } from '../characters';
+import { CHARACTERS, getCategoryList, getChildCharacters } from '../characters';
+import { trackFeatureUse } from '../lib/analytics';
 import { CharacterCard } from './CharacterCard';
 
 interface Props {
@@ -19,34 +20,48 @@ export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen, prefe
   const matches = useMemo(() => {
     if (!q) return null;
     return CHARACTERS.filter((c) =>
-      [c.name, c.nameEn, c.series, c.seriesEn, c.role].some((f) =>
+      [c.name, c.nameEn, c.series, c.seriesEn, c.role, ...c.keywords].some((f) =>
         f.toLowerCase().includes(q),
       ),
-    );
+    ).sort((a, b) => b.popularity - a.popularity);
   }, [q]);
 
+  // Debounced so a whole search term is tracked once it settles, not per keystroke.
+  useEffect(() => {
+    if (!q) return;
+    const timer = setTimeout(() => {
+      trackFeatureUse('search', { query: q, resultCount: matches?.length ?? 0 });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [q, matches]);
+
+  // Trending/recommended stay work-level: works have a unique popularity rank
+  // each, but a character inherits its parent's exact value, so mixing kinds
+  // here would just cluster one work's own characters at the top instead of
+  // surfacing a variety of works.
+  const works = useMemo(() => CHARACTERS.filter((c) => c.kind === 'work'), []);
   const trending = useMemo(
-    () => [...CHARACTERS].sort((a, b) => b.popularity - a.popularity).slice(0, 6),
-    [],
+    () => [...works].sort((a, b) => b.popularity - a.popularity).slice(0, 6),
+    [works],
   );
   const recommended = useMemo(() => {
     if (preferenceIds.length === 0) return trending;
     const selectedIndexes = preferenceIds
-      .map((id) => CHARACTERS.findIndex((character) => character.id === id))
+      .map((id) => works.findIndex((character) => character.id === id))
       .filter((index) => index >= 0);
-    return [...CHARACTERS]
+    return [...works]
       .filter((character) => character.id !== 'misc')
       .sort((a, b) => {
         const score = (character: Character) => {
-          const index = CHARACTERS.indexOf(character);
+          const index = works.indexOf(character);
           const distance = Math.min(...selectedIndexes.map((selected) => Math.abs(selected - index)));
           return (preferenceIds.includes(character.id) ? 1000 : 0) + Math.max(0, 100 - distance) + character.popularity / 100;
         };
         return score(b) - score(a);
       })
       .slice(0, 6);
-  }, [preferenceIds, trending]);
-  const seriesList = useMemo(() => getSeriesList(), []);
+  }, [preferenceIds, trending, works]);
+  const categoryList = useMemo(() => getCategoryList(), []);
 
   const renderCard = (c: Character) => (
     <CharacterCard
@@ -56,6 +71,9 @@ export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen, prefe
       postCount={postCounts[c.id]}
       onToggle={() => onToggle(c.id)}
       onOpen={() => onOpen(c.id)}
+      childCharacters={c.kind === 'work' ? getChildCharacters(c.id) : undefined}
+      isChildSubscribed={isSubscribed}
+      onToggleChild={onToggle}
     />
   );
 
@@ -103,12 +121,12 @@ export function DiscoverView({ isSubscribed, postCounts, onToggle, onOpen, prefe
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">{recommended.map(renderCard)}</div>
           </section>
 
-          {/* By series */}
-          {seriesList.map(({ series, seriesEn, characters }) => (
-            <section key={series} className="mb-10">
+          {/* By category */}
+          {categoryList.map(({ category, categoryEn, characters }) => (
+            <section key={category} className="mb-10">
               <h2 className="text-sm font-bold text-slate-500 mb-3">
-                {series}{' '}
-                <span className="text-slate-300 font-medium">· {seriesEn}</span>
+                {category}{' '}
+                <span className="text-slate-300 font-medium">· {categoryEn}</span>
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {characters.map(renderCard)}

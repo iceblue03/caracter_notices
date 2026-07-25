@@ -4,6 +4,7 @@ import { Character, FeedPost } from '../types';
 import { CHARACTER_MAP } from '../characters';
 import { colorFromString, imageSrc, relativeTime, stripLinks } from '../lib/utils';
 import { translatePost } from '../lib/api';
+import { trackFeatureUse } from '../lib/analytics';
 import { CharacterChip } from './CharacterChip';
 
 interface Props {
@@ -53,6 +54,7 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
     });
 
   const handleTranslate = async () => {
+    trackFeatureUse('translate');
     setTranslateState('loading');
     const res = await translatePost(post.content);
     if (res.translated) {
@@ -163,6 +165,7 @@ export function PostCard({ post, highlightIds, onSelectCharacter }: Props) {
           href={post.link}
           target="_blank"
           rel="noreferrer"
+          onClick={() => trackFeatureUse('view_original_post')}
           className="shrink-0 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
         >
           원본 보기 <ExternalLink size={14} />
