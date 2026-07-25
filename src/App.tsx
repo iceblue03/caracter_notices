@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Home, Compass, Sparkles, ShoppingBag } from 'lucide-react';
+import { Home, Compass, Sparkles, ShoppingBag, BarChart3 } from 'lucide-react';
 import { CHARACTERS, getCharacter } from './characters';
 import { SAMPLE_POSTS, SAMPLE_GOODS } from './data';
 import { resolveFeaturedEvents } from './events';
 import { annotatePost, annotateGoods } from './lib/matching';
 import { syncLiveFeed, syncGoods } from './lib/api';
+import { PageViewMethod, trackBack, trackPageView, trackSubscribe } from './lib/analytics';
 import { Character, FeedPost, GoodsListing } from './types';
 import { useSubscriptions } from './hooks/useSubscriptions';
 import { Sidebar } from './components/Sidebar';
@@ -13,12 +14,34 @@ import { GoodsView } from './components/GoodsView';
 import { DiscoverView } from './components/DiscoverView';
 import { CharacterDetailView } from './components/CharacterDetailView';
 import { TasteLanding } from './components/TasteLanding';
+import { StatsView } from './components/StatsView';
 
 type View =
   | { name: 'feed' }
   | { name: 'discover' }
   | { name: 'goods'; characterId?: string }
-  | { name: 'character'; id: string };
+  | { name: 'character'; id: string }
+  | { name: 'stats' };
+
+const ADMIN_FLAG_KEY = 'ojosama.admin';
+
+/** The stats dashboard is internal (it shows other testers' aggregate behavior), so
+ *  its nav entry stays hidden unless this device was explicitly opted in — either
+ *  previously, or via a one-time `?stats=1` link that latches the flag on. */
+function useStatsEnabled(): boolean {
+  const [enabled] = useState(() => {
+    try {
+      if (new URLSearchParams(window.location.search).has('stats')) {
+        localStorage.setItem(ADMIN_FLAG_KEY, 'true');
+        return true;
+      }
+      return localStorage.getItem(ADMIN_FLAG_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+  return enabled;
+}
 
 function dedupeById<T extends { id: string }>(items: T[]): T[] {
   const seen = new Set<string>();
@@ -27,6 +50,7 @@ function dedupeById<T extends { id: string }>(items: T[]): T[] {
 
 export default function App() {
   const { ids, isSubscribed, toggle, replace } = useSubscriptions();
+  const statsEnabled = useStatsEnabled();
   const [onboarded, setOnboarded] = useState(() => localStorage.getItem('ojosama.onboarded') === 'true');
   const [preferenceIds, setPreferenceIds] = useState<string[]>(() => {
     try {
@@ -132,6 +156,14 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fires once per fresh landing on the main app (a reload with onboarding
+  // already done, or the moment onboarding just finished) — every other
+  // view change is tracked at its own navigation call site below instead.
+  useEffect(() => {
+    if (onboarded) trackPageView('feed', { method: 'initial' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onboarded]);
+
   // Manual "새로고침" in the Goods tab — the only user-triggered scrape in the
   // app (goods starts with an empty seed, unlike the news feed, so it needs
   // one). Still cost-guarded server-side (FORCE_MIN_MS), so mashing the
@@ -154,16 +186,38 @@ export default function App() {
     }
   }, []);
 
-  const goFeed = useCallback(() => setView({ name: 'feed' }), []);
-  const goDiscover = useCallback(() => setView({ name: 'discover' }), []);
-  const openGoods = useCallback((characterId?: string) => {
+  const goFeed = useCallback((method: PageViewMethod = 'nav') => {
+    trackPageView('feed', { method });
+    setView({ name: 'feed' });
+  }, []);
+  const goDiscover = useCallback((method: PageViewMethod = 'nav') => {
+    trackPageView('discover', { method });
+    setView({ name: 'discover' });
+  }, []);
+  const openGoods = useCallback((characterId?: string, method: PageViewMethod = 'nav') => {
+    trackPageView('goods', { method, id: characterId });
     setView({ name: 'goods', characterId });
     window.scrollTo({ top: 0 });
   }, []);
-  const openCharacter = useCallback((id: string) => {
+  const openCharacter = useCallback((id: string, method: PageViewMethod = 'card') => {
+    trackPageView('character', { id, name: getCharacter(id)?.name, method });
     setView({ name: 'character', id });
     window.scrollTo({ top: 0 });
   }, []);
+  const goStats = useCallback((method: PageViewMethod = 'nav') => {
+    trackPageView('stats', { method });
+    setView({ name: 'stats' });
+  }, []);
+
+  const trackedToggle = useCallback(
+    (id: string) => {
+      const character = getCharacter(id);
+      const wasSubscribed = isSubscribed(id);
+      trackSubscribe(wasSubscribed ? 'unsubscribe' : 'subscribe', character?.kind ?? 'work', id, character?.name ?? id);
+      toggle(id);
+    },
+    [isSubscribed, toggle],
+  );
 
   const activeCharacterId = view.name === 'character' ? view.id : undefined;
 
@@ -189,15 +243,17 @@ export default function App() {
         active={view.name}
         activeCharacterId={activeCharacterId}
         subscribed={subscribedCharacters}
-        onFeed={goFeed}
-        onDiscover={goDiscover}
-        onGoods={() => openGoods()}
-        onSelectCharacter={openCharacter}
+        onFeed={() => goFeed('sidebar')}
+        onDiscover={() => goDiscover('sidebar')}
+        onGoods={() => openGoods(undefined, 'sidebar')}
+        onSelectCharacter={(id) => openCharacter(id, 'sidebar')}
+        showStats={statsEnabled}
+        onStats={() => goStats('sidebar')}
       />
 
       {/* Mobile top bar */}
       <header className="md:hidden fixed top-0 inset-x-0 z-20 h-14 bg-white/90 backdrop-blur border-b border-slate-200 flex items-center px-4">
-        <button onClick={goFeed} className="flex items-center gap-2">
+        <button onClick={() => goFeed('sidebar')} className="flex items-center gap-2">
           <span className="grid place-items-center w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white">
             <Sparkles size={16} />
           </span>
@@ -214,8 +270,8 @@ export default function App() {
             events={featuredEvents}
             live={live}
             syncNote={syncNote}
-            onSelectCharacter={openCharacter}
-            onDiscover={goDiscover}
+            onSelectCharacter={(id) => openCharacter(id, 'chip')}
+            onDiscover={() => goDiscover('discover_cta')}
             onOpenGoods={openGoods}
           />
         )}
@@ -224,8 +280,8 @@ export default function App() {
           <DiscoverView
             isSubscribed={isSubscribed}
             postCounts={postCounts}
-            onToggle={toggle}
-            onOpen={openCharacter}
+            onToggle={trackedToggle}
+            onOpen={(id) => openCharacter(id, 'card')}
             preferenceIds={preferenceIds}
           />
         )}
@@ -256,13 +312,18 @@ export default function App() {
                 goods={goodsByCharacter[character.id] ?? []}
                 subscribed={isSubscribed(character.id)}
                 subscribedIds={ids}
-                onToggle={() => toggle(character.id)}
-                onSelectCharacter={openCharacter}
+                onToggle={() => trackedToggle(character.id)}
+                onSelectCharacter={(id) => openCharacter(id, 'chip')}
                 onOpenGoods={openGoods}
-                onBack={() => setView({ name: 'feed' })}
+                onBack={() => {
+                  trackBack('character', character.id, 'feed');
+                  goFeed('back_button');
+                }}
               />
             );
           })()}
+
+        {view.name === 'stats' && statsEnabled && <StatsView onBack={() => goFeed('back_button')} />}
       </main>
 
       {/* Mobile bottom nav */}
@@ -271,13 +332,13 @@ export default function App() {
           active={view.name === 'feed' || view.name === 'character'}
           icon={<Home size={21} />}
           label="홈"
-          onClick={goFeed}
+          onClick={() => goFeed()}
         />
         <MobileTab
           active={view.name === 'discover'}
           icon={<Compass size={21} />}
           label="탐색"
-          onClick={goDiscover}
+          onClick={() => goDiscover()}
         />
         <MobileTab
           active={view.name === 'goods'}
@@ -285,6 +346,14 @@ export default function App() {
           label="굿즈"
           onClick={() => openGoods()}
         />
+        {statsEnabled && (
+          <MobileTab
+            active={view.name === 'stats'}
+            icon={<BarChart3 size={21} />}
+            label="통계"
+            onClick={() => goStats()}
+          />
+        )}
       </nav>
     </div>
   );

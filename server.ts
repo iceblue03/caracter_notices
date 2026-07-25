@@ -10,7 +10,9 @@ import { scrapeTwitter, mergeFeedPosts } from "./src/server/twitter";
 import { scrapeGoods, mergeGoodsListings } from "./src/server/goods";
 import { translateText } from "./src/server/translate";
 import { fetchProxiedImage } from "./src/server/imageProxy";
+import { summarize } from "./src/lib/analyticsSummary";
 import type { FeedPost, GoodsListing } from "./src/types";
+import type { AnalyticsEvent } from "./src/analyticsTypes";
 
 // A manual "refresh" can trigger a new scrape at most this often (env-tunable).
 const FORCE_MIN_MS = process.env.SCRAPE_FORCE_MIN_MS != null
@@ -65,6 +67,47 @@ function loadStores(): void {
   }
 }
 
+// ── Analytics store (user-testing telemetry) ──────────────────────────────
+// Same "flat JSON file on disk" approach as the feed store above — this is
+// internal usage data for a test group, not a production analytics pipeline,
+// so there's no need for a real database. Capped so a long-running test
+// session can't grow the file without bound; the write itself is debounced
+// since ingestion can arrive every few seconds per active tab.
+const ANALYTICS_STORE_PATH = path.join(process.cwd(), "data", "analytics-store.json");
+const MAX_STORED_EVENTS = 50_000;
+const ANALYTICS_SAVE_DEBOUNCE_MS = 3000;
+let analyticsEvents: AnalyticsEvent[] = [];
+let analyticsSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+function loadAnalyticsStore(): void {
+  try {
+    const data = JSON.parse(readFileSync(ANALYTICS_STORE_PATH, "utf8"));
+    if (Array.isArray(data?.events)) {
+      analyticsEvents = data.events as AnalyticsEvent[];
+      console.log(`[analytics] loaded ${analyticsEvents.length} saved events from disk`);
+    }
+  } catch {
+    /* no store yet — first run */
+  }
+}
+
+function saveAnalyticsStoreNow(): void {
+  try {
+    mkdirSync(path.dirname(ANALYTICS_STORE_PATH), { recursive: true });
+    writeFileSync(ANALYTICS_STORE_PATH, JSON.stringify({ events: analyticsEvents }));
+  } catch (error) {
+    console.error("[analytics] save failed:", error);
+  }
+}
+
+function scheduleAnalyticsSave(): void {
+  if (analyticsSaveTimer) return;
+  analyticsSaveTimer = setTimeout(() => {
+    analyticsSaveTimer = null;
+    saveAnalyticsStoreNow();
+  }, ANALYTICS_SAVE_DEBOUNCE_MS);
+}
+
 /** Scrape, then merge NEW tweets into the persistent store (dedup by id). */
 async function scrapeAndStoreFeed(token: string): Promise<FeedPost[]> {
   const fresh = await scrapeTwitter(token);
@@ -91,6 +134,7 @@ async function startServer() {
 
   // Load any previously scraped posts so restarts reuse them (no re-scrape).
   loadStores();
+  loadAnalyticsStore();
 
   app.use(cors());
   app.use(express.json());
@@ -255,6 +299,48 @@ async function startServer() {
     }
     const result = await translateText(text, target || "ko");
     res.json(result);
+  });
+
+  // ── User-testing analytics ──────────────────────────────────────────────
+  // Ingestion is deliberately permissive: this is internal telemetry for a
+  // known test group (not a public multi-tenant API), so malformed individual
+  // events are just skipped rather than rejecting the whole batch. Batch size
+  // and total retained events are still capped so a runaway client can't grow
+  // the store without bound.
+  app.post("/api/analytics/events", (req, res) => {
+    const body = req.body as { clientId?: string; sessionId?: string; events?: any[] };
+    const events = Array.isArray(body?.events) ? body.events.slice(0, 200) : [];
+    if (events.length === 0) {
+      return res.status(400).json({ ok: false, error: "events required" });
+    }
+    for (const e of events) {
+      if (!e || typeof e.name !== "string") continue;
+      analyticsEvents.push({
+        name: e.name,
+        ts: typeof e.ts === "number" ? e.ts : Date.now(),
+        clientId: String(body.clientId ?? e.clientId ?? "unknown").slice(0, 100),
+        sessionId: String(body.sessionId ?? e.sessionId ?? "unknown").slice(0, 100),
+        props: e.props && typeof e.props === "object" ? e.props : undefined,
+      });
+    }
+    if (analyticsEvents.length > MAX_STORED_EVENTS) {
+      analyticsEvents = analyticsEvents.slice(analyticsEvents.length - MAX_STORED_EVENTS);
+    }
+    scheduleAnalyticsSave();
+    res.json({ ok: true });
+  });
+
+  // Aggregated stats for the in-app dashboard (see StatsView) — drop-off
+  // points, onboarding funnel/abandonment, back-navigation, feature usage,
+  // mascot expressions, and subscription/preference breakdowns.
+  app.get("/api/analytics/summary", (_req, res) => {
+    res.json(summarize(analyticsEvents));
+  });
+
+  // Small raw export for ad-hoc debugging — most-recent-first, capped.
+  app.get("/api/analytics/raw", (req, res) => {
+    const limit = Math.min(Number(req.query.limit) || 200, 2000);
+    res.json({ events: analyticsEvents.slice(-limit).reverse() });
   });
 
   // ── Vite / static hosting ──────────────────────────────────────────────

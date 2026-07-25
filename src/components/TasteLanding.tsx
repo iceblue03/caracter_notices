@@ -17,6 +17,13 @@ import {
 import { ANIME_TITLES } from '../animeTitles';
 import { WORKS, getCharacter } from '../characters';
 import { gradientStyle } from '../lib/utils';
+import {
+  trackMascotExpression,
+  trackOnboardingComplete,
+  trackOnboardingStepBack,
+  trackOnboardingStepView,
+  trackPreference,
+} from '../lib/analytics';
 import { GuideMascot } from './GuideMascot';
 
 // `WORKS` isn't in the same order as `ANIME_TITLES` (curated works were
@@ -202,17 +209,25 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
   const [reply, setReply] = useState<string | null>(null);
   const replyTimer = useRef<number | undefined>(undefined);
 
-  const react = useCallback((text?: string) => {
+  const react = useCallback((text?: string, key?: string) => {
     setMood('happy');
     setReply(text ?? null);
+    trackMascotExpression('happy', key ?? text, step);
     window.clearTimeout(replyTimer.current);
     replyTimer.current = window.setTimeout(() => {
       setMood('idle');
       setReply(null);
     }, 2400);
-  }, []);
+  }, [step]);
 
   useEffect(() => () => window.clearTimeout(replyTimer.current), []);
+
+  // "어떤 표정인지" / onboarding funnel: every stage the guide shows counts as a
+  // step reached, whichever direction the user got there from.
+  useEffect(() => {
+    trackOnboardingStepView(step, STEPS[step].kicker);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
 
   // Most-talked-about titles first, so popular picks surface without searching.
   const countOf = (title: string) => {
@@ -258,7 +273,10 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
     const current = profile[key];
     const turningOn = !current.includes(value);
     setField(key, turningOn ? [...current, value] : current.filter((item) => item !== value));
-    if (turningOn) react(PICK_REPLIES[value]);
+    if (turningOn) {
+      react(PICK_REPLIES[value], value);
+      trackPreference(key, value);
+    }
   };
 
   const toggleTitle = (index: number) => {
@@ -266,7 +284,10 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
     setSelected((current) =>
       turningOn ? [...current, index] : current.filter((item) => item !== index),
     );
-    if (turningOn) react(workReply(ANIME_TITLES[index], selected.length + 1));
+    if (turningOn) {
+      react(workReply(ANIME_TITLES[index], selected.length + 1), 'work_pick');
+      trackPreference('titles', ANIME_TITLES[index]);
+    }
   };
 
   // This onboarding is experimental, so no step should block progress — users
@@ -277,6 +298,7 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
     const workIds = selected
       .map((index) => WORK_ID_BY_TITLE.get(ANIME_TITLES[index]))
       .filter((id): id is string => Boolean(id));
+    trackOnboardingComplete(score, rank.name, workIds.length);
     onComplete({ workIds, profile });
   };
 
@@ -344,7 +366,10 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                       <FieldLabel icon={<MapPin size={13} />} text="거주지역" />
                       <select
                         value={profile.residence}
-                        onChange={(event) => setField('residence', event.target.value)}
+                        onChange={(event) => {
+                          setField('residence', event.target.value);
+                          if (event.target.value) trackPreference('residence', event.target.value);
+                        }}
                         className="ok-field"
                       >
                         <option value="">지역 선택</option>
@@ -359,6 +384,9 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                         max="120"
                         value={profile.age}
                         onChange={(event) => setField('age', event.target.value)}
+                        onBlur={(event) => {
+                          if (event.target.value) trackPreference('age', event.target.value);
+                        }}
                         placeholder="만 나이를 입력해주세요"
                         className="ok-field"
                       />
@@ -370,7 +398,8 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
                     selected={profile.gender ? [profile.gender] : []}
                     onToggle={(value) => {
                       setField('gender', value);
-                      react();
+                      react(undefined, 'gender_pick');
+                      trackPreference('gender', value);
                     }}
                   />
                   <ChoiceGroup
@@ -544,7 +573,10 @@ export function TasteLanding({ postCounts, onComplete }: Props) {
               <footer className="mt-8 flex items-center gap-3 border-t border-slate-100 pt-5">
                 {step > 0 && (
                   <button
-                    onClick={() => setStep((value) => value - 1)}
+                    onClick={() => {
+                      trackOnboardingStepBack(step, step - 1);
+                      setStep((value) => value - 1);
+                    }}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-bold text-slate-500 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
                   >
                     <ArrowLeft size={17} /> 이전

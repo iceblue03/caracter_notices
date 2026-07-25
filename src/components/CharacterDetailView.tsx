@@ -1,6 +1,7 @@
 import { ArrowLeft, Check, Plus, Inbox, ShoppingBag, ChevronRight } from 'lucide-react';
 import { Character, FeedPost, GoodsListing } from '../types';
-import { gradientStyle, relativeTime } from '../lib/utils';
+import { getCharacter } from '../characters';
+import { catalogSubtitle, gradientStyle, relativeTime } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
 import { PostCard } from './PostCard';
 import { GoodsCard } from './GoodsCard';
@@ -29,6 +30,10 @@ export function CharacterDetailView({
   onBack,
 }: Props) {
   const latest = posts[0];
+  const parentWork = character.kind === 'character' && character.workId
+    ? getCharacter(character.workId)
+    : undefined;
+  const subLine = [character.nameEn, character.role].filter(Boolean).join(' · ');
 
   return (
     <div className="pb-10">
@@ -86,18 +91,26 @@ export function CharacterDetailView({
         </div>
 
         <div className="mt-3">
-          <span
-            className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1.5"
-            style={{ color: character.color, backgroundColor: `${character.color}1a` }}
-          >
-            {character.series}
-          </span>
+          {parentWork ? (
+            <button
+              onClick={() => onSelectCharacter(parentWork.id)}
+              className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1.5 hover:opacity-80 transition-opacity"
+              style={{ color: character.color, backgroundColor: `${character.color}1a` }}
+            >
+              {parentWork.name} 보러가기
+            </button>
+          ) : (
+            <span
+              className="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1.5"
+              style={{ color: character.color, backgroundColor: `${character.color}1a` }}
+            >
+              {catalogSubtitle(character)}
+            </span>
+          )}
           <h1 className="text-2xl font-extrabold text-slate-900 leading-tight">
             {character.name}
           </h1>
-          <p className="text-sm text-slate-400">
-            {character.nameEn} · {character.role}
-          </p>
+          {subLine && <p className="text-sm text-slate-400">{subLine}</p>}
         </div>
 
         <p className="mt-3 text-slate-600 leading-relaxed">{character.tagline}</p>

@@ -1,7 +1,8 @@
 import { Check, Plus } from 'lucide-react';
 import { Character } from '../types';
-import { gradientStyle } from '../lib/utils';
+import { catalogSubtitle, gradientStyle } from '../lib/utils';
 import { CharacterAvatar } from './CharacterAvatar';
+import { CharacterChip } from './CharacterChip';
 
 interface Props {
   character: Character;
@@ -9,9 +10,22 @@ interface Props {
   postCount?: number;
   onToggle: () => void;
   onOpen: () => void;
+  /** This work's representative characters, if any — rendered as a quick-subscribe row. */
+  childCharacters?: Character[];
+  isChildSubscribed?: (id: string) => boolean;
+  onToggleChild?: (id: string) => void;
 }
 
-export function CharacterCard({ character, subscribed, postCount, onToggle, onOpen }: Props) {
+export function CharacterCard({
+  character,
+  subscribed,
+  postCount,
+  onToggle,
+  onOpen,
+  childCharacters,
+  isChildSubscribed,
+  onToggleChild,
+}: Props) {
   return (
     <div className="group relative bg-white border border-slate-200/80 rounded-2xl hover:shadow-lg hover:shadow-slate-200/60 transition-shadow">
       {/* Banner */}
@@ -46,7 +60,7 @@ export function CharacterCard({ character, subscribed, postCount, onToggle, onOp
         <div className="mt-2.5 flex items-start justify-between gap-2">
           <button onClick={onOpen} className="text-left min-w-0">
             <h3 className="font-bold text-slate-900 leading-tight truncate">{character.name}</h3>
-            <p className="text-xs text-slate-400 truncate">{character.series}</p>
+            <p className="text-xs text-slate-400 truncate">{catalogSubtitle(character)}</p>
           </button>
           {postCount !== undefined && postCount > 0 && (
             <span className="shrink-0 text-[11px] font-semibold text-slate-500 bg-slate-100 rounded-full px-2 py-0.5">
@@ -58,6 +72,25 @@ export function CharacterCard({ character, subscribed, postCount, onToggle, onOp
         <p className="mt-2 text-xs text-slate-500 leading-relaxed line-clamp-2 h-8">
           {character.tagline}
         </p>
+
+        {childCharacters && childCharacters.length > 0 && (
+          <div className="mt-3">
+            <p className="text-[10px] font-bold text-slate-400">
+              대표 캐릭터 <span className="font-medium text-slate-300">· 탭해서 개별 구독</span>
+            </p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+              {childCharacters.map((child) => (
+                <CharacterChip
+                  key={child.id}
+                  character={child}
+                  size="sm"
+                  active={isChildSubscribed?.(child.id)}
+                  onClick={() => onToggleChild?.(child.id)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <button
           onClick={onToggle}

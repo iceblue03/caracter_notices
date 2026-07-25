@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CalendarDays, ChevronLeft, ChevronRight, Clock, ExternalLink, MapPin } from 'lucide-react';
 import { EventFeature, countdownLabel, formatEventDates } from '../events';
 import { imageSrc } from '../lib/utils';
+import { trackFeatureUse } from '../lib/analytics';
 
 interface Props {
   /** Ordered soonest-first; the banner shows one at a time. */
@@ -78,6 +79,7 @@ export function EventBanner({ features }: Props) {
               href={post.link}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackFeatureUse('event_banner_click', { event: event.id })}
               className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-900 transition-colors hover:bg-white/90"
             >
               원본 소식 보기 <ExternalLink size={14} />

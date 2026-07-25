@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Compass, CircleOff, Inbox, ShoppingBag, ChevronRight } from 'lucide-react';
 import { Character, FeedPost, GoodsListing } from '../types';
 import { EventFeature } from '../events';
+import { trackFeatureUse } from '../lib/analytics';
 import { EventBanner } from './EventBanner';
 import { PostCard } from './PostCard';
 import { GoodsCard } from './GoodsCard';
@@ -151,7 +152,10 @@ export function FeedView({
             <FilterPill
               key={g}
               active={genre === g}
-              onClick={() => setGenre((current) => (current === g ? 'all' : g))}
+              onClick={() => {
+                if (genre !== g) trackFeatureUse('filter_genre', { genre: g });
+                setGenre((current) => (current === g ? 'all' : g));
+              }}
               compact
             >
               {g}
@@ -172,7 +176,10 @@ export function FeedView({
           <FilterPill
             key={c.id}
             active={filter === c.id}
-            onClick={() => setFilter((current) => (current === c.id ? 'all' : c.id))}
+            onClick={() => {
+              if (filter !== c.id) trackFeatureUse('filter_character', { id: c.id, name: c.name });
+              setFilter((current) => (current === c.id ? 'all' : c.id));
+            }}
           >
             <CharacterAvatar character={c} size={24} />
             {c.name}

@@ -31,13 +31,30 @@ export interface Work {
 /**
  * A subscribable anime character. Users pick these, and the feed is filtered
  * down to SNS posts that mention the character (via `keywords` / `hashtags`).
+ *
+ * Two kinds share this shape so every existing component (Discover, feed,
+ * detail) can render either one unchanged:
+ *  - `kind: 'work'` — a whole work (series-level subscription). `id` is the
+ *    work's own id.
+ *  - `kind: 'character'` — one representative character within a work
+ *    (character-level subscription). `workId` points back to the parent
+ *    `kind: 'work'` entry. Subscribing to the work already implies every
+ *    character in it (the work's `keywords` include all its characters'
+ *    terms); subscribing to just a character narrows the feed to that one.
  */
 export interface Character {
   id: string;
   name: string;        // Korean display name  e.g. "고죠 사토루"
   nameEn: string;      // e.g. "Gojo Satoru"
-  series: string;      // Korean series title  e.g. "주술회전"
-  seriesEn: string;    // e.g. "Jujutsu Kaisen"
+  series: string;      // Korean work title this entry belongs to — its own
+                        // title for `kind: 'work'`, its parent's for `kind: 'character'`
+  seriesEn: string;    // English counterpart of `series`
+  /** Broad content category ("애니메이션" | "게임" | "기타 콘텐츠" | "기타"). */
+  category: string;
+  categoryEn: string;
+  kind: 'work' | 'character';
+  /** For `kind: 'character'`, the id of the parent `kind: 'work'` entry. */
+  workId?: string;
   role: string;        // short descriptor e.g. "특급 주술사"
   emoji: string;       // shown on the avatar
   color: string;       // accent hex, used for chips / theming
