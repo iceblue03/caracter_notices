@@ -24,46 +24,131 @@ body {
   display: none;
 }
 
-.field-control {
+/* ---------------------------------------------------------------------------
+ * Onboarding theme ("입덕 게이트").
+ *
+ * A white canvas with violet as the single accent. Scoped under `.ok-shell`
+ * so nothing here leaks into the rest of the app.
+ *
+ * Motion rule: the background never moves. Every animation below is either a
+ * response to something the user just did (flash, pop, rise, bubble) or a sign
+ * of life on the guide character — so nothing competes with reading the form.
+ * ------------------------------------------------------------------------- */
+.ok-shell {
+  background:
+    radial-gradient(700px 440px at 10% -8%, rgb(139 92 246 / 0.10), transparent 64%),
+    radial-gradient(560px 380px at 94% 2%, rgb(168 85 247 / 0.08), transparent 60%),
+    radial-gradient(760px 480px at 52% 108%, rgb(196 181 253 / 0.16), transparent 62%),
+    #fbfaff;
+}
+
+/* Faint dot texture, faded out below the fold so it never fights the content. */
+.ok-grid {
+  background-image: radial-gradient(rgb(124 58 237 / 0.11) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 78% 55% at 50% 0%, #000, transparent 72%);
+  mask-image: radial-gradient(ellipse 78% 55% at 50% 0%, #000, transparent 72%);
+}
+
+/* — reactions ————————————————————————————————————————————————————— */
+@keyframes ok-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ok-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  65% { transform: scale(1.14); }
+  100% { opacity: 1; transform: scale(1); }
+}
+/* Ripple that fires once, the moment an option turns on. */
+@keyframes ok-flash {
+  from { opacity: 0.85; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.07); }
+}
+@keyframes ok-bubble {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+/* — signs of life on the guide ———————————————————————————————————— */
+@keyframes ok-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes ok-gauge-shine {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(240%); }
+}
+
+.ok-rise { animation: ok-rise 380ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ok-pop { animation: ok-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.ok-flash { animation: ok-flash 460ms ease-out forwards; }
+.ok-bubble { animation: ok-bubble 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.ok-breathe { animation: ok-breathe 4.2s ease-in-out infinite; }
+
+.ok-gauge-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 38%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  animation: ok-gauge-shine 2.8s ease-in-out infinite;
+}
+
+.ok-field {
   width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
+  border: 1px solid #e6e2f5;
+  border-radius: 0.9rem;
   background: #fff;
-  padding: 0.75rem 1rem;
-  color: #0f172a;
-  font-size: 0.875rem;
+  padding: 0.8rem 1rem;
+  color: #1e1b34;
+  font-size: 0.9rem;
+  font-weight: 600;
   outline: none;
-  transition: border-color 150ms, box-shadow 150ms, background-color 150ms;
+  transition: border-color 160ms, box-shadow 160ms;
 }
-.field-control:focus {
+.ok-field:focus {
   border-color: #a78bfa;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgb(139 92 246 / 0.1);
+  box-shadow: 0 0 0 4px rgb(139 92 246 / 0.14);
 }
-.field-control::placeholder {
-  color: #64748b;
+.ok-field::placeholder {
+  color: #a5a0bd;
+  font-weight: 500;
 }
-.field-control-search {
-  padding-left: 2.75rem;
+.ok-field-search {
+  padding-left: 3rem;
 }
-.field-control-search:not(:placeholder-shown) {
+.ok-field-search:not(:placeholder-shown) {
   padding-left: 1rem;
 }
-.field-control option {
-  color: #0f172a;
-}
-.scrollbar-thin {
+
+.ok-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #c4b5fd #f1f5f9;
+  scrollbar-color: #c4b5fd transparent;
 }
-.scrollbar-thin::-webkit-scrollbar {
-  width: 7px;
+.ok-scroll::-webkit-scrollbar {
+  width: 8px;
 }
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: #f1f5f9;
+.ok-scroll::-webkit-scrollbar-track {
+  background: #f4f1fd;
   border-radius: 999px;
 }
-.scrollbar-thin::-webkit-scrollbar-thumb {
+.ok-scroll::-webkit-scrollbar-thumb {
   background: #c4b5fd;
   border-radius: 999px;
+}
+.ok-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ok-rise,
+  .ok-pop,
+  .ok-flash,
+  .ok-bubble,
+  .ok-breathe,
+  .ok-gauge-shine::after {
+    animation: none;
+  }
+  .ok-flash { opacity: 0; }
 }
