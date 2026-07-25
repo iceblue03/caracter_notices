@@ -77,19 +77,24 @@ Environment Variables에 등록하면 됩니다.
 동작합니다. 진짜로 데이터셋을 불려나가려면 `bun run scrape-once`를 실행해 이 파일들을
 갱신하고 커밋하세요.
 
-### ⚠️ 실제 스크래핑은 이 코드베이스를 만든 환경에서 실행하지 못했습니다
+### `bun run scrape-once` 실행 시 알아둘 점
 
-이 기능을 만든 개발 환경(Claude Code 샌드박스)은 `api.apify.com` · `x.com` ·
-`bunjang.co.kr` · `daangn.com`으로 나가는 외부 접속이 조직 네트워크 정책으로 막혀
-있었습니다. 그래서:
+이 프로젝트를 만든 개발 환경은 Apify/X/당근/번개장터로 나가는 외부 접속이 막혀 있어서,
+스크래핑 코드는 실제 인터넷이 되는 환경(로컬 PC 등)에서 처음 실행했을 때 다음이
+확인/수정되었습니다:
 
-- `src/server/goods.ts`의 당근마켓/번개장터 액터 입력 필드명은 실제 스키마를 확인하지 못한
-  **최선의 추측**입니다 (파일 상단 주석 참고). 여러 후보 필드명을 한꺼번에 보내는 방어적
-  방식이라 대부분은 동작하겠지만, 결과가 0건이면 Apify 콘솔에서 해당 액터의 Input 탭을 열어
-  실제 필드명을 확인하고 `scrapePlatform`(입력)/`toGoodsListing`(출력 파싱)을 맞춰주세요.
-- 실제 데이터는 `bun run scrape-once`를 정상적인 인터넷 접속이 가능한 환경(로컬 PC 등)에서
-  한 번 실행해 채워야 합니다. 이 명령은 두 토큰을 순서대로 소진하며 트위터 49개 계정 +
-  당근마켓/번개장터 굿즈를 한 번에 긁어 `data/*.json`과 `src/sample*.json`에 저장합니다.
+- **굿즈(당근마켓·번개장터)** — 실제로 잘 동작합니다. 캐릭터 키워드 하나당 액터를
+  한 번씩 호출합니다(`GOODS_PER_QUERY`개씩, 기본 30개) — 처음엔 모든 키워드를 한 번에
+  보내려 했지만, 두 액터 모두 `query`(단수) 필드만 읽고 나머지 키워드를 무시하는 걸
+  실제 실행으로 확인해서 키워드별 반복 호출로 고쳤습니다. 당근마켓은 동네 기반이라
+  검색당 결과가 적게 나오는 게 정상입니다(`DANGGEUN_REGIONS`로 지역 추가 가능).
+- **트위터/X** — 기본 액터는 `parseforge/x-com-scraper`입니다. 대안으로 제안됐던
+  `apidojo/tweet-scraper`는 실제 실행해보니 무료 Apify 플랜에서는 API 호출 자체를
+  거부해서(유료 플랜 필요), 기본값을 다시 `parseforge/x-com-scraper`로 되돌렸습니다
+  — 유료 플랜이 있다면 `APIFY_TWITTER_ACTOR`로 바꿔 쓸 수 있습니다.
+- `bun run scrape-once`는 두 토큰을 순서대로 소진하며 굿즈 + 트위터 49개 계정을 한
+  번에 긁어 `data/*.json`과 `src/sample*.json`에 저장합니다(기존 값과 병합되므로
+  여러 번 실행해도 안전합니다). 실행 후 `git diff`로 확인하고 커밋/푸시하세요.
 
 ## 구조
 
@@ -111,7 +116,7 @@ src/
   types.ts                Character · Work · FeedPost · GoodsListing · PostMatch 타입
   analyticsTypes.ts       사용자 테스트 이벤트 스키마 (클라이언트·서버 공용)
   server/                 스크래핑 로직 (Express·서버리스 함수·scrape-once가 공용으로 사용)
-    twitter.ts            X/Twitter 스크래핑 (Apify apidojo/tweet-scraper)
+    twitter.ts            X/Twitter 스크래핑 (Apify parseforge/x-com-scraper)
     goods.ts              당근마켓·번개장터 스크래핑 (Apify oxygenated_quagmire/*)
     translate.ts          Google 번역 프록시
     apifyTokens.ts        여러 Apify 토큰을 순서대로 소진하는 TokenRotator

@@ -3,16 +3,15 @@ import type { GoodsListing, GoodsPlatform } from '../types';
 import { CHARACTERS } from '../characters';
 import { TokenRotator } from './apifyTokens';
 
-// ── IMPORTANT: unverified against the live actors ─────────────────────────
-// These two actor IDs were found and confirmed by the project owner directly
-// on Apify Store — this dev environment has no outbound access to
-// api.apify.com, so their exact Input/Output schema couldn't be inspected
-// here. The input payload below sends several plausible field-name aliases
-// for the same value (Apify actors generally ignore fields they don't
-// recognize, so this is a safe hedge, not a real "we support all of these").
-// If a sync comes back with 0 items for a platform, open that actor's page
-// on Apify Console → Input tab, and trim buildInput()/toGoodsListing() down
-// to the field names it actually documents.
+// ── Confirmed against a real run (2026-07-25) ─────────────────────────────
+// Both actors take a SINGULAR `query` per run (not an array) — an earlier
+// version of this file sent the whole keyword list in one call hoping for
+// batch support, and the actor silently used only keywords[0], burning the
+// rest of the character list. Fixed by calling once per keyword instead
+// (see scrapePlatform). Bunjang's log confirmed its real fields directly:
+// `query`, `maxResults`, `sortBy`, `skipAds`. Danggeun's fields are less
+// certain (its log just says "N queries" / "max K items each"), so several
+// aliases are still sent there defensively.
 const BUNJANG_ACTOR = process.env.APIFY_BUNJANG_ACTOR || 'oxygenated_quagmire/bunjang-market-scraper';
 const DANGGEUN_ACTOR = process.env.APIFY_DANGGEUN_ACTOR || 'oxygenated_quagmire/daangn-market-scraper';
 
@@ -47,11 +46,8 @@ const DANGGEUN_REGIONS = (process.env.DANGGEUN_REGIONS
   ? process.env.DANGGEUN_REGIONS.split(',').map((s) => s.trim()).filter(Boolean)
   : DEFAULT_DANGGEUN_REGIONS);
 
-// One actor call covers ALL keywords for a platform (assuming the actor
-// accepts a list) rather than one call per keyword — much cheaper in Apify
-// compute/credit than looping. If the actor turns out to only read the first
-// keyword, per-keyword coverage degrades but the run still costs one call.
-const MAX_ITEMS_PER_KEYWORD = Number(process.env.GOODS_PER_QUERY) || 20;
+// Items requested PER keyword (one actor run per keyword — see scrapePlatform).
+const MAX_ITEMS_PER_KEYWORD = Number(process.env.GOODS_PER_QUERY) || 30;
 
 function pick(raw: any, keys: string[]): any {
   for (const k of keys) {
@@ -140,27 +136,25 @@ function toGoodsListing(raw: any, platform: GoodsPlatform): GoodsListing | null 
   };
 }
 
-async function scrapePlatform(
-  token: string | string[],
+/** One actor run for a single keyword. Isolated try/catch so one bad keyword doesn't abort the rest. */
+async function scrapeKeyword(
+  rotator: TokenRotator,
   actorId: string,
   platform: GoodsPlatform,
-  keywords: string[],
-  extraInput: Record<string, unknown> = {},
+  keyword: string,
+  extraInput: Record<string, unknown>,
 ): Promise<GoodsListing[]> {
-  if (keywords.length === 0) return [];
-  const rotator = new TokenRotator(token);
   try {
-    const maxItems = MAX_ITEMS_PER_KEYWORD * keywords.length;
     const items = await rotator.run(async (client: ApifyClient) => {
       const run = await client.actor(actorId).call({
-        search: keywords,
-        searchQueries: keywords,
-        keywords,
-        query: keywords[0],
-        keyword: keywords[0],
-        maxItems,
-        maxResults: maxItems,
-        limit: maxItems,
+        query: keyword,
+        keyword,
+        search: keyword,
+        maxResults: MAX_ITEMS_PER_KEYWORD,
+        maxItems: MAX_ITEMS_PER_KEYWORD,
+        limit: MAX_ITEMS_PER_KEYWORD,
+        sortBy: 'date',
+        skipAds: true,
         ...extraInput,
       });
       return (await client.dataset(run.defaultDatasetId).listItems()).items;
@@ -170,12 +164,29 @@ async function scrapePlatform(
       const listing = toGoodsListing(raw, platform);
       if (listing) listings.push(listing);
     }
-    console.log(`  [${platform}] ${items.length} raw items → ${listings.length} parsed`);
+    console.log(`  [${platform}] "${keyword}": ${items.length} raw → ${listings.length} parsed`);
     return listings;
   } catch (error: any) {
-    console.error(`  [${platform}] actor "${actorId}" failed — ${error?.message || error}`);
+    console.error(`  [${platform}] "${keyword}" failed — ${error?.message || error}`);
     return [];
   }
+}
+
+/** One actor run PER keyword (confirmed necessary — see the note above on `query` being singular). */
+async function scrapePlatform(
+  token: string | string[],
+  actorId: string,
+  platform: GoodsPlatform,
+  keywords: string[],
+  extraInput: Record<string, unknown> = {},
+): Promise<GoodsListing[]> {
+  if (keywords.length === 0) return [];
+  const rotator = new TokenRotator(token);
+  const listings: GoodsListing[] = [];
+  for (const keyword of keywords) {
+    listings.push(...(await scrapeKeyword(rotator, actorId, platform, keyword, extraInput)));
+  }
+  return listings;
 }
 
 /** Scrape only 번개장터 (Bunjang) — exported separately so the one-shot script can split token/keyword usage per platform. */
@@ -193,10 +204,10 @@ export async function scrapeDanggeun(token: string | string[], keywords: string[
 }
 
 /**
- * Scrape both marketplaces via their dedicated Apify actors — one call per
- * platform (all keywords passed together), not one call per keyword, to
- * keep Apify credit usage low. A failure on one platform doesn't block the
- * other (Promise.all + per-call try/catch, see scrapePlatform).
+ * Scrape both marketplaces via their dedicated Apify actors — one actor run
+ * per keyword per platform (BUNJANG_KEYWORDS.length + DANGGEUN_KEYWORDS.length
+ * runs total). A failure on one keyword/platform doesn't block the rest
+ * (Promise.all across platforms + per-keyword try/catch, see scrapePlatform).
  */
 export async function scrapeGoods(token: string | string[]): Promise<GoodsListing[]> {
   console.log(
